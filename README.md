@@ -1,6 +1,6 @@
 # forge
 hypixel skyblock android app to notify when forge ended
-
+built in react native javascript expo
 
 idk how to add the rest of the project
 
