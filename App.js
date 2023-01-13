@@ -54,7 +54,7 @@ export default class App extends React.Component {
       else if(profiledata1.cause == "Invalid API key"){ alert('Invalid api key');
       apikeysuccess ="Invalid"; uuid = ""; profiledata = ""; }}
     } catch (a){
-      alert('No internet connection')
+      alert('No internet connection(or hypixel issue)\nError: ' + a)
       this.setState({
         isLoading:false,
         profiledata: "",
@@ -65,12 +65,7 @@ export default class App extends React.Component {
       return;
     }
      //const bazaardata = await fetch('https://api.hypixel.net/skyblock/bazaar').then((response) => response.json())
-
-
-
-
-
-
+    //prob never gonna use this
       this.setState({
         isLoading:false,
         profiledata: profiledata,
@@ -78,9 +73,6 @@ export default class App extends React.Component {
         uisc: uuidsuccess,
         apsc: apikeysuccess,
       })
-
-
-
       }
     else{
       this.setState({
@@ -102,6 +94,23 @@ export default class App extends React.Component {
       await SecureStore.setItemAsync(item,value);
     } catch (e) {
       console.log(e);
+    }
+  };
+
+  getuuid = async (username) => {
+    try {
+      var uuid1 = await fetch("https://api.mojang.com/users/profiles/minecraft/" + username)
+      .then((response) => response.json())
+      if(uuid1 == "")
+      {
+        alert('invalid username')
+      }
+      else{
+      this.savedata('uuid', uuid1.id)
+      alert('uuid saved: ' + uuid1.id);
+      }
+    } catch (e) {
+      alert(e);
     }
   };
 
@@ -180,8 +189,6 @@ if(forge['5']){
 
     
   
-  
-
 
       Notifications.scheduleNotificationAsync({
         content: {
@@ -213,10 +220,10 @@ if(forge['5']){
       this.savedata("apikey", event.nativeEvent.text)
       }}>
     </TextInput>
-    <TextInput style={styles.textinput1} placeholder={"uuid: " + this.state.uisc + ' ' +this.state.uuid} onSubmitEditing={event =>
+    <TextInput style={styles.textinput1} placeholder={"username: " + this.state.uisc} onSubmitEditing={event =>
          {
-      alert('uuid saved: ' + event.nativeEvent.text )
-      this.savedata("uuid", event.nativeEvent.text)
+
+      this.getuuid(event.nativeEvent.text);
       }}>
     </TextInput>
     <Button
