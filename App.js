@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, Text, View,StyleSheet, TextInput, Button} from 'react-native';
+import {ActivityIndicator, Text, View,StyleSheet, TextInput, Button, ToastAndroid} from 'react-native';
 import * as Notifications from 'expo-notifications';
 import * as SecureStore from 'expo-secure-store';
 import forgeconvert from "./forgeconvert.json";
@@ -54,7 +54,14 @@ export default class App extends React.Component {
       else if(profiledata1.cause == "Invalid API key"){ alert('Invalid api key');
       apikeysuccess ="Invalid"; uuid = ""; profiledata = ""; }}
     } catch (a){
-      alert('No internet connection(or hypixel issue)\nError: ' + a)
+      if(a == 'TypeError: Network request failed')
+      {
+        ToastAndroid.show('No internet connection',ToastAndroid.SHORT)
+      }
+      else{
+        alert('Api request failed\nError: ' + a);
+      }
+      
       this.setState({
         isLoading:false,
         profiledata: "",
@@ -103,17 +110,30 @@ export default class App extends React.Component {
       .then((response) => response.json())
       if(uuid1 == "")
       {
-        alert('invalid username')
+        ToastAndroid.show('Invalid username', ToastAndroid.SHORT); // not possible but whatever
       }
       else{
       this.savedata('uuid', uuid1.id)
-      alert('uuid saved: ' + uuid1.id);
+      ToastAndroid.show('uuid saved: ' + uuid1.id,ToastAndroid.SHORT);
       }
     } catch (e) {
-      alert(e);
+      ToastAndroid.show('Invalid username', ToastAndroid.SHORT);
     }
   };
 
+  notify = async (timeleft) => {
+    await Notifications.scheduleNotificationAsync({
+      identifier:'forgetimer',
+      content: {
+      title: "Forge",
+      body: 'Forge is ready',
+      priority:'max',
+      data: { data: 'collect forge' },
+      },
+      trigger: { seconds: timeleft },
+      });
+      ToastAndroid.show('Notification set', ToastAndroid.SHORT);
+  }
 
   componentDidMount()
   {
@@ -189,16 +209,8 @@ if(forge['5']){
 
     
   
-
-      Notifications.scheduleNotificationAsync({
-        content: {
-        title: "Forge",
-        body: 'Forge is ready',
-        priority:'max',
-        data: { data: 'collect forge' },
-        },
-        trigger: { seconds: timeleft },
-        });
+    //remember to fix
+      this.notify(timeleft);
       }
       
       
@@ -216,7 +228,7 @@ if(forge['5']){
         <Text style={styles.text1}>{forgeid4} ending at: {forgeendtime4} ({forgeuntil4}) </Text>
         <Text style={styles.text1}>{forgeid5} ending at: {forgeendtime5} ({forgeuntil5}) </Text>
         <TextInput style={styles.textinput1} placeholder={"api key: " + this.state.apsc} onSubmitEditing={event =>
-         {alert('api key saved: ' + event.nativeEvent.text )
+         {ToastAndroid.show('api key saved: ' + event.nativeEvent.text,ToastAndroid.SHORT )
       this.savedata("apikey", event.nativeEvent.text)
       }}>
     </TextInput>
@@ -229,18 +241,17 @@ if(forge['5']){
     <Button
     title="Clear scheduled notifications"
     style={{textAlign:'center',backgroundColor:'gray' }}
-    onPress={() => {
-     Notifications.cancelAllScheduledNotificationsAsync();
-     alert('Notifications cleared')
+    onPress={async () => {
+     await Notifications.cancelAllScheduledNotificationsAsync();
+     ToastAndroid.show('Notifications cleared', ToastAndroid.SHORT)
     }}
     ></Button>
     <View style={{marginTop:20}}>
     <Button
     title="Test notification"
     style={{textAlign:'center',backgroundColor:'gray' }}
-    onPress={() => {
-      
-      Notifications.scheduleNotificationAsync({
+    onPress={async () => {
+      await Notifications.scheduleNotificationAsync({
         content: {
         title: "Forge",
         body: 'Forge is ready',
@@ -249,6 +260,7 @@ if(forge['5']){
         },
         trigger: { seconds: 1 },
         });
+        ToastAndroid.show('Tested notification', ToastAndroid.SHORT);
     }}
     ></Button>
     </View>
@@ -259,6 +271,7 @@ if(forge['5']){
     onPress={() => {
       this.getdata();
       this.render();
+      ToastAndroid.show('Data reloaded', ToastAndroid.TOP)
     }}
     ></Button>
     </View>
