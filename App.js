@@ -78,7 +78,7 @@ export default class App extends React.Component {
         profiledata: profiledata,
         uuid: uuid,
         uisc: uuidsuccess,
-        apsc: apikeysuccess,
+        apsc: apikeysuccess
       })
       }
     else{
@@ -123,7 +123,6 @@ export default class App extends React.Component {
 
   notify = async (timeleft) => {
     await Notifications.scheduleNotificationAsync({
-      identifier:'forgetimer',
       content: {
       title: "Forge",
       body: 'Forge is ready',
@@ -207,12 +206,10 @@ if(forge['5']){
   if(forge['5'].startTime + forgetime1 - Date.now() > 0){
   timeleft = (forge['5'].startTime + forgetime1 - 180000 - Date.now())/1000; } else { timeleft = 1; }} 
 
-    
-  
+
     //remember to fix
       this.notify(timeleft);
       }
-      
       
     
   
