@@ -3,7 +3,7 @@ import {ActivityIndicator, Text, View,StyleSheet, TextInput, Button, ToastAndroi
 import * as Notifications from 'expo-notifications';
 import * as SecureStore from 'expo-secure-store';
 import forgeconvert from "./forgeconvert.json";
-var forgetime,forgeendtime1,forgeendtime2,forgeendtime3,forgeendtime4,forgeendtime5,forgeuntil1,forgeuntil2,forgeuntil3,forgeuntil4,forgeuntil5,forgetime1,forgetime2,forgetime3,forgetime4,forgetime5,forgeid1,forgeid2,forgeid3,forgeid4,forgeid5;
+var titletext,forgetime,forgeendtime1,forgeendtime2,forgeendtime3,forgeendtime4,forgeendtime5,forgeuntil1,forgeuntil2,forgeuntil3,forgeuntil4,forgeuntil5,forgetime1,forgetime2,forgetime3,forgetime4,forgetime5,forgeid1,forgeid2,forgeid3,forgeid4,forgeid5,forgeend1,forgeend2,forgeend3,forgeend4,forgeend5;
 var timeleft = 1;
 
   
@@ -31,6 +31,17 @@ export default class App extends React.Component {
       var apikeysuccess = 'no';
       var uuid = await SecureStore.getItemAsync('uuid');
       var apikey = await SecureStore.getItemAsync('apikey');
+      var i1 = await SecureStore.getItemAsync('i1');
+      var i2 = await SecureStore.getItemAsync('i2');
+      var i3 = await SecureStore.getItemAsync('i3');
+      var i4 = await SecureStore.getItemAsync('i4');
+      var i5 = await SecureStore.getItemAsync('i5');
+      var e1 = await SecureStore.getItemAsync('e1');
+      var e2 = await SecureStore.getItemAsync('e2');
+      var e3 = await SecureStore.getItemAsync('e3');
+      var e4 = await SecureStore.getItemAsync('e4');
+      var e5 = await SecureStore.getItemAsync('e5');
+      
       if(uuid) { uuidsuccess = 'Valid'}
       if(apikey) { apikeysuccess = 'Valid'}
       if(uuid && apikey)
@@ -67,7 +78,8 @@ export default class App extends React.Component {
         profiledata: "",
         uuid: uuid,
         uisc: uuidsuccess,
-        apsc: apikeysuccess
+        apsc: apikeysuccess,
+        cache: {i1:i1,i2:i2,i3:i3,i4:i4,i5:i5,e1:e1,e2:e2,e3:e3,e4:e4,e5:e5}
       });
       return;
     }
@@ -78,7 +90,8 @@ export default class App extends React.Component {
         profiledata: profiledata,
         uuid: uuid,
         uisc: uuidsuccess,
-        apsc: apikeysuccess
+        apsc: apikeysuccess,
+        cache: {i1:i1,i2:i2,i3:i3,i4:i4,i5:i5,e1:e1,e2:e2,e3:e3,e4:e4,e5:e5}
       })
       }
     else{
@@ -87,7 +100,8 @@ export default class App extends React.Component {
         profiledata: "",
         uuid: "",
         uisc: uuidsuccess,
-        apsc: apikeysuccess
+        apsc: apikeysuccess,
+        cache: {i1:i1,i2:i2,i3:i3,i4:i4,i5:i5,e1:e1,e2:e2,e3:e3,e4:e4,e5:e5}
       });
     }
     } catch (e) {
@@ -121,6 +135,27 @@ export default class App extends React.Component {
     }
   };
 
+  getapikey = async (apikey) => {
+    try {
+      var apikey1 = await fetch("https://api.hypixel.net/key?key=" + apikey)
+      .then((response) => response.json())
+      if(apikey1.success == true)
+      {
+        this.savedata('apikey', apikey)
+        ToastAndroid.show('api key saved: ' + apikey,ToastAndroid.SHORT);
+      }
+      else{
+        ToastAndroid.show('Invalid api key', ToastAndroid.SHORT); 
+        if(apikey == "")
+        {
+          this.savedata('apikey',"")
+        }
+      }
+    } catch (e) {
+      ToastAndroid.show('Error, failed to check api key validity.', ToastAndroid.SHORT);
+    }
+  };
+
   notify = async (timeleft) => {
     await Notifications.scheduleNotificationAsync({
       content: {
@@ -131,7 +166,10 @@ export default class App extends React.Component {
       },
       trigger: { seconds: timeleft },
       });
-      ToastAndroid.show('Notification set', ToastAndroid.SHORT);
+      setTimeout(() => {
+        ToastAndroid.show('Notification set', ToastAndroid.SHORT);
+      }, 5000);
+      
   }
 
   componentDidMount()
@@ -169,53 +207,86 @@ export default class App extends React.Component {
 if(forge['1']){
   forgeid1 = forge['1'].id.toLowerCase();
   forgetime1 = 3600000*forgetime*forgeconvert[forge['1'].id];
-  forgeendtime1 = moment(new Date(forge['1'].startTime + forgetime1)).format('hh:mm A');
-  forgeuntil1 =  moment(forge['1'].startTime + forgetime1).fromNow();
-  if(forge['1'].startTime + forgetime1 - Date.now() > 0){ 
-  timeleft = (forge['1'].startTime + forgetime1 - 180000 - Date.now())/1000; } else { timeleft = 1; }} 
+  forgeend1 = forge['1'].startTime + forgetime1;
+  forgeendtime1 = moment(new Date(forgeend1)).format('hh:mm A');
+  forgeuntil1 =  moment(forgeend1).fromNow();
+  if(forgeend1 - Date.now() > 0){ 
+  timeleft = (forgeend1 - 180000 - Date.now())/1000; } else { timeleft = 1; }} 
 
 if(forge['2']){
   forgeid2 = forge['2'].id.toLowerCase();
   forgetime2 = 3600000*forgetime*forgeconvert[forge['2'].id];
-  forgeendtime2 = moment(new Date(forge['2'].startTime + forgetime2)).format('hh:mm A');
-  forgeuntil2 =  moment(forge['2'].startTime + forgetime2).fromNow();
-  if(forge['2'].startTime + forgetime1 - Date.now() > 0){ 
-  timeleft = (forge['2'].startTime + forgetime1 - 180000 - Date.now())/1000; } else { timeleft = 1; }}
+  forgeend2 = forge['2'].startTime + forgetime2;
+  forgeendtime2 = moment(new Date(forgeend2)).format('hh:mm A');
+  forgeuntil2 =  moment(forgeend2).fromNow();
+  if(forgeend2 - Date.now() > 0){ 
+  timeleft = (forgeend2 - 180000 - Date.now())/1000; } else { timeleft = 1; }}
 
 if(forge['3']){
   forgeid3 = forge['3'].id.toLowerCase();
   forgetime3 = 3600000*forgetime*forgeconvert[forge['3'].id];
-  forgeendtime3 = moment(new Date(forge['3'].startTime + forgetime3)).format('hh:mm A');
-  forgeuntil3 =  moment(forge['3'].startTime + forgetime3).fromNow();
-  if(forge['3'].startTime + forgetime1 - Date.now() > 0){
-  timeleft = (forge['3'].startTime + forgetime1 - 180000 - Date.now())/1000; } else { timeleft = 1; }}
+  forgeend3 = forge['3'].startTime + forgetime3;
+  forgeendtime3 = moment(new Date(forgeend3)).format('hh:mm A');
+  forgeuntil3 =  moment(forgeend3).fromNow();
+  if(forgeend3 - Date.now() > 0){
+  timeleft = (forgeend3 - 180000 - Date.now())/1000; } else { timeleft = 1; }}
 
 if(forge['4']){
   forgeid4 = forge['4'].id.toLowerCase();
   forgetime4 = 3600000*forgetime*forgeconvert[forge['4'].id];
-  forgeendtime4 = moment(new Date(forge['4'].startTime + forgetime4)).format('hh:mm A');
-  forgeuntil4 =  moment(forge['4'].startTime + forgetime4).fromNow();
-  if(forge['4'].startTime + forgetime1 - Date.now() > 0){ 
-  timeleft = (forge['4'].startTime + forgetime1 - 180000 - Date.now())/1000; } else { timeleft = 1; }}
+  forgeend4 = forge['4'].startTime + forgetime4;
+  forgeendtime4 = moment(new Date(forgeend4)).format('hh:mm A');
+  forgeuntil4 =  moment(forgeend4).fromNow();
+  if(forgeend4 - Date.now() > 0){ 
+  timeleft = (forgeend4 - 180000 - Date.now())/1000; } else { timeleft = 1; }}
 
 if(forge['5']){
   forgeid5 = forge['5'].id.toLowerCase();
   forgetime5 = 3600000*forgetime*forgeconvert[forge['5'].id];
-  forgeendtime5 = moment(new Date(forge['5'].startTime + forgetime5)).format('hh:mm A');
-  forgeuntil5 =  moment(forge['5'].startTime + forgetime5).fromNow();
-  if(forge['5'].startTime + forgetime1 - Date.now() > 0){
-  timeleft = (forge['5'].startTime + forgetime1 - 180000 - Date.now())/1000; } else { timeleft = 1; }} 
-
-
+  forgeend5 = forge['5'].startTime + forgetime5;
+  forgeendtime5 = moment(new Date(forgeend5)).format('hh:mm A');
+  forgeuntil5 =  moment(forgeend5).fromNow();
+  if(forgeend5 - Date.now() > 0){
+  timeleft = (forgeend5 - 180000 - Date.now())/1000; } else { timeleft = 1; }} 
+    this.savedata('i1',forgeid1)
+    this.savedata('i2',forgeid2)
+    this.savedata('i3',forgeid3)
+    this.savedata('i4',forgeid4)
+    this.savedata('i5',forgeid5)
+    this.savedata('e1', forgeend1.toString())
+    this.savedata('e2', forgeend2.toString())
+    this.savedata('e3', forgeend3.toString())
+    this.savedata('e4', forgeend4.toString())
+    this.savedata('e5', forgeend5.toString())
     //remember to fix
-      this.notify(timeleft);
+      titletext = 'Dwarven Forge'
+      this.notify(1);
+      } else {
+        try{
+        titletext = 'Dwarven Forge(Cache)'
+        forgeid1 = this.state.cache.i1;
+        forgeid2 = this.state.cache.i2;
+        forgeid3 = this.state.cache.i3;
+        forgeid4 = this.state.cache.i4;
+        forgeid5 = this.state.cache.i5;
+        forgeendtime1 = moment(new Date(parseInt(this.state.cache.e1))).format('hh:mm A');
+        forgeendtime2 = moment(new Date(parseInt(this.state.cache.e2))).format('hh:mm A');
+        forgeendtime3 = moment(new Date(parseInt(this.state.cache.e3))).format('hh:mm A');
+        forgeendtime4 = moment(new Date(parseInt(this.state.cache.e4))).format('hh:mm A');
+        forgeendtime5 = moment(new Date(parseInt(this.state.cache.e5))).format('hh:mm A');
+        forgeuntil1 = moment(new Date(parseInt(this.state.cache.e1))).fromNow();
+        forgeuntil2 = moment(new Date(parseInt(this.state.cache.e2))).fromNow();
+        forgeuntil3 = moment(new Date(parseInt(this.state.cache.e3))).fromNow();
+        forgeuntil4 = moment(new Date(parseInt(this.state.cache.e4))).fromNow();
+        forgeuntil5 = moment(new Date(parseInt(this.state.cache.e5))).fromNow();
+        }catch(e){console.log(e)}
       }
       
     
   
   return(
 <View style={{flex:1, flexDirection: 'column', backgroundColor:"#242323"}}>
-    <Text style={{paddingTop:50,fontSize:20,fontStyle:"bold",color:"cyan",fontWeight: 'bold',margin:5, textAlign:'center'}}>Dwarven Forge</Text>
+    <Text style={{paddingTop:50,fontSize:20,fontStyle:"bold",color:"cyan",fontWeight: 'bold',margin:5, textAlign:'center'}}>{titletext}</Text>
     
         
         
@@ -225,15 +296,10 @@ if(forge['5']){
         <Text style={styles.text1}>{forgeid4} ending at: {forgeendtime4} ({forgeuntil4}) </Text>
         <Text style={styles.text1}>{forgeid5} ending at: {forgeendtime5} ({forgeuntil5}) </Text>
         <TextInput style={styles.textinput1} placeholder={"api key: " + this.state.apsc} onSubmitEditing={event =>
-         {ToastAndroid.show('api key saved: ' + event.nativeEvent.text,ToastAndroid.SHORT )
-      this.savedata("apikey", event.nativeEvent.text)
-      }}>
+         {this.getapikey(event.nativeEvent.text)}}>
     </TextInput>
     <TextInput style={styles.textinput1} placeholder={"username: " + this.state.uisc} onSubmitEditing={event =>
-         {
-
-      this.getuuid(event.nativeEvent.text);
-      }}>
+    {this.getuuid(event.nativeEvent.text)}}>
     </TextInput>
     <Button
     title="Clear scheduled notifications"
