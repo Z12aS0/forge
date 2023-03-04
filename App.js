@@ -3,10 +3,10 @@ import {ActivityIndicator, Text, View,StyleSheet, TextInput, Button, ToastAndroi
 import * as Notifications from 'expo-notifications';
 import * as SecureStore from 'expo-secure-store';
 import forgeconvert from "./forgeconvert.json";
-var titletext,forgetime,forgeendtime1,forgeendtime2,forgeendtime3,forgeendtime4,forgeendtime5,forgeuntil1,forgeuntil2,forgeuntil3,forgeuntil4,forgeuntil5,forgetime1,forgetime2,forgetime3,forgetime4,forgetime5,forgeid1,forgeid2,forgeid3,forgeid4,forgeid5,forgeend1,forgeend2,forgeend3,forgeend4,forgeend5;
+
+var titletext,forgetime,forgeendtime1,forgeendtime2,forgeendtime3,forgeendtime4,forgeendtime5,forgeuntil1,forgeuntil2,forgeuntil3,forgeuntil4,forgeuntil5,forgetime1,forgetime2,forgetime3,forgetime4,forgetime5,forgeid1,forgeid2,forgeid3,forgeid4,forgeid5,forgeend1,forgeend2,forgeend3,forgeend4,forgeend5,midnightReset,heavypearldisplay,pearlsReset, heavypearldisplay1, godpotdisplay;
 var timeleft = 1;
 
-  
 Notifications.setNotificationHandler({
 handleNotification: () => {
 return {
@@ -196,8 +196,25 @@ export default class App extends React.Component {
  
   if(this.state.uuid && this.state.profiledata)
   {
+    midnightReset = (Date.now() - 18000000) / 86400000 * 86400000 + 18000000;
+    pearlsReset = midnightReset - 18000000;
+    
+    
     var profiledata = this.state.profiledata.members[this.state.uuid];
     var forge = profiledata.forge.forge_processes.forge_1;
+    if(pearlsReset < Date.now() && profiledata.nether_island_player_data.matriarch.last_attempt < pearlsReset)
+    {
+      heavypearldisplay1 = "READY";
+      heavypearldisplay = "(" + moment(pearlsReset).fromNow() + ")";
+  }
+    else{
+      heavypearldisplay1 = "Collected"
+    }
+    if(profiledata.active_effects.length > 28) //have a god pot
+    {
+      godpotdisplay = Math.round((profiledata.active_effects[0].ticks_remaining / 20 / 60 / 60) * 100) / 100;
+    }
+
   if(profiledata.mining_core.nodes.forge_time){
     var forgetime_ = profiledata.mining_core.nodes.forge_time;
     if(profiledata.mining_core.nodes.forge_time < 20)
@@ -258,9 +275,10 @@ if(forge['5']){
     this.savedata('e3', forgeend3.toString())
     this.savedata('e4', forgeend4.toString())
     this.savedata('e5', forgeend5.toString())
-    //remember to fix
+
       titletext = 'Dwarven Forge'
-      this.notify(1);
+
+      this.notify(timeleft);
       } else {
         try{
         titletext = 'Dwarven Forge(Cache)'
@@ -279,6 +297,7 @@ if(forge['5']){
         forgeuntil3 = moment(new Date(parseInt(this.state.cache.e3))).fromNow();
         forgeuntil4 = moment(new Date(parseInt(this.state.cache.e4))).fromNow();
         forgeuntil5 = moment(new Date(parseInt(this.state.cache.e5))).fromNow();
+        ToastAndroid.show('Cache mode', ToastAndroid.SHORT)
         }catch(e){console.log(e)}
       }
       
@@ -287,16 +306,15 @@ if(forge['5']){
   return(
 <View style={{flex:1, flexDirection: 'column', backgroundColor:"#242323"}}>
     <Text style={{paddingTop:50,fontSize:20,fontStyle:"bold",color:"cyan",fontWeight: 'bold',margin:5, textAlign:'center'}}>{titletext}</Text>
-    
-        
-        
         <Text style={styles.text1}>{forgeid1} ending at: {forgeendtime1} ({forgeuntil1}) </Text>
         <Text style={styles.text1}>{forgeid2} ending at: {forgeendtime2} ({forgeuntil2}) </Text>
         <Text style={styles.text1}>{forgeid3} ending at: {forgeendtime3} ({forgeuntil3}) </Text>
         <Text style={styles.text1}>{forgeid4} ending at: {forgeendtime4} ({forgeuntil4}) </Text>
         <Text style={styles.text1}>{forgeid5} ending at: {forgeendtime5} ({forgeuntil5}) </Text>
-        <TextInput style={styles.textinput1} placeholder={"api key: " + this.state.apsc} onSubmitEditing={event =>
-         {this.getapikey(event.nativeEvent.text)}}>
+        <Text style={styles.text1}>God potion remaining: {godpotdisplay}h</Text>
+        <Text style={styles.text1}>Heavy Pearls: {heavypearldisplay1} {heavypearldisplay}</Text>
+    <TextInput style={styles.textinput1} placeholder={"api key: " + this.state.apsc} onSubmitEditing={event =>
+    {this.getapikey(event.nativeEvent.text)}}>
     </TextInput>
     <TextInput style={styles.textinput1} placeholder={"username: " + this.state.uisc} onSubmitEditing={event =>
     {this.getuuid(event.nativeEvent.text)}}>
