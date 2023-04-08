@@ -7,6 +7,7 @@ import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import * as Network from 'expo-network';
 
 const BACKGROUND_FETCH_TASK = 'Forge-Background-Task';
 
@@ -19,7 +20,7 @@ var timeleft = 1;
 
 
 
-async function notify(timeleft, text = "Forge is ready", noToast = 0){
+async function notify(timeleft = 1, text = "Forge is ready", noToast = 0){
   await Notifications.scheduleNotificationAsync({
     content: {
     title: "Forge",
@@ -36,7 +37,7 @@ async function registertask(interval=8){
     let a = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
     if(!a){
     BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-      minimumInterval: 60*60*interval, //8h maybe
+      minimumInterval: 60*60*interval, //8h default
       stopOnTerminate: false, startOnBoot: true});
     ToastAndroid.show('Toggled on(interval:' + interval + "h)", ToastAndroid.SHORT);
   }else{
@@ -97,9 +98,33 @@ Notifications.setNotificationHandler({
   })
 
 TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
-  var uuid = await SecureStore.getItemAsync('uuid');
-  var apikey = await SecureStore.getItemAsync('apikey');
+  if((await Network.getNetworkStateAsync()).isConnected)
+  {
+    background();
+    return BackgroundFetch.BackgroundFetchResult.NewData; //???? what does this even do lmao
+  } 
+  else 
+  {
+    waitForConnection()
+    return;
+  }
+});
+
+async function waitForConnection(){
+  if((await Network.getNetworkStateAsync()).isConnected){
+    background();
+    return;
+  }
+  else{
+    setTimeout(waitForConnection, 300000); //5min
+    return;
+  }
+}
+
+async function background(){
   try{
+    var uuid = await SecureStore.getItemAsync('uuid');
+    var apikey = await SecureStore.getItemAsync('apikey');
     var profiledata1 = await fetch('https://api.hypixel.net/skyblock/profiles?uuid=' + uuid + '&key=' + apikey )
     .then((response) => response.json())
     if(profiledata1.success == true) //is something invalid?
@@ -108,24 +133,21 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
     {
       if(profiledata1.profiles[i].selected == true)
       {
-        var profiledata = profiledata1.profiles[i].members[uuid];
+        var profiledata = profiledata1.profiles[i].members[uuid]; //success
         break;
       }
     }
   } else {
     if(profiledata1.cause == "Malformed UUID")
-    { notify(1,"Failed to execute auto notification: invalid UUID",1)}
+    { notify(undefined,"Failed to execute auto notification: invalid UUID",1); return}
 
     else if(profiledata1.cause == "Invalid API key")
-    {notify(1,"Failed to execute auto notification: Invalid API key",1)}}
+    {notify(undefined,"Failed to execute auto notification: Invalid API key",1); return}
+    else{setTimeout(background,5000); return;}} // "Hypixel api is under maintenance" :nerd: :nerd: :clown:
 
   } catch (a){
     if(a == 'TypeError: Network request failed')
-
-    {notify(1,"Failed to execute auto notification: no internet connection.",1)}
-
-    else{notify(1,"Failed to execute auto notification: Error with api: " + a,1)}
-
+    {waitForConnection()}
   }
 
   if(!profiledata)return
@@ -173,12 +195,7 @@ if(forge['1']){
 
 
   notify(timeleft);
-  return BackgroundFetch.BackgroundFetchResult.NewData;
-});
-
-
-
-
+}
 
 
 class Home extends React.Component{
@@ -406,7 +423,7 @@ if(forge['5']){
     title="Test notification"
     style={{textAlign:'center',backgroundColor:'gray' }}
     onPress={async () => {
-      notify(1,'Forge is ready',1)
+      notify(undefined,undefined,1)
         ToastAndroid.show('Tested notification', ToastAndroid.SHORT);
     }}
     ></Button>
