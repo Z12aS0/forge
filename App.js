@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, Text, View,StyleSheet, TextInput, Button, ToastAndroid} from 'react-native';
+import {ActivityIndicator, Text, View,StyleSheet, TextInput, Button, ToastAndroid, FlatList, TouchableOpacity} from 'react-native';
 import * as Notifications from 'expo-notifications';
 import * as SecureStore from 'expo-secure-store';
 import forgeconvert from "./forgeconvert.json";
@@ -80,7 +80,8 @@ export default function App() {
     <NavigationContainer theme={{colors:{background:'#242323', backgroundColor:'#242323',card:'#242323',text:'#bcc3cf'}}}>
      <Stack.Navigator>
       <Stack.Screen name="Forge" component={Home}/>
-      <Stack.Screen name="Config" component={Config} />
+      <Stack.Screen name="Config" component={Config}/>
+      <Stack.Screen name="Bazaar" component={Bazaar}/>
      </Stack.Navigator>
     </NavigationContainer>
   );
@@ -420,6 +421,13 @@ if(forge['5']){
     </View>
     <View style={{marginTop:20}}>
     <Button
+    title="Bazaar"
+    style={{textAlign:'center',backgroundColor:'gray' }}
+    onPress={() => this.props.navigation.navigate('Bazaar')}
+    ></Button>
+    </View>
+    <View style={{marginTop:20}}>
+    <Button
     title="Test notification"
     style={{textAlign:'center',backgroundColor:'gray' }}
     onPress={async () => {
@@ -486,6 +494,96 @@ render(){
   )
 }}
 
+class Bazaar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filteredData: [
+        {product_id:"dummydata1",quick_status:{buyPrice:1, sellPrice:1}},
+        {product_id:"dummydata2",quick_status:{buyPrice:2, sellPrice:12}}
+      ],
+      isLoading: true,
+    };
+  }
+
+  componentDidMount() {
+   this.fetchData();
+  }
+
+  fetchData = async (a = false) => {
+    try {
+      const response = await fetch('https://api.hypixel.net/skyblock/bazaar');
+      const data = await response.json();
+      if(!a){this.setState({ filteredData: Object.values(data.products),data: Object.values(data.products), isLoading: false });
+    }
+      else{
+        this.setState({ data: Object.values(data.products), isLoading: false });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    
+  };
+
+  renderItem = ({ item }) => {
+    return (
+      <TouchableOpacity style={styles.cardContainer} onPress={() => 
+      alert("id: " + item.product_id.toLowerCase() + "\nBuy price: " + Math.floor(item.quick_status.sellPrice) + "\nSell price: " + Math.floor(item.quick_status.buyPrice) )}>
+        <Text style={styles.text}>{item.product_id.replace(/_/g, ' ').toLowerCase()}</Text>
+        <Text style={styles.text}>Buy Price: {this.formatNumber(item.quick_status.sellPrice)}</Text>
+        <Text style={styles.text}>Sell Price: {this.formatNumber(item.quick_status.buyPrice)}</Text>
+      </TouchableOpacity>
+    );
+  };
+  formatNumber = (num) => {
+
+    const formattedNumber = num.toLocaleString();
+    if(num >= 1000 && num < 1000000){
+      return (num/1000).toFixed(2) + "K";
+    }
+    else if (num >= 1000000 && num < 1000000000) {
+      return (num / 1000000).toFixed(2) + "M";
+    }
+
+    else if (num >= 1000000000) {
+      return (num / 1000000000).toFixed(4) + "B";
+    }
+    else {
+      return Math.floor(formattedNumber);
+    }
+  };
+  filterData = (query) => {
+    let query1 = query.toLowerCase();
+    let filteredData = this.state.data.filter((item) => item.product_id.toLowerCase().replace(/_/g, ' ').includes(query1))
+    this.setState({ filteredData:filteredData });
+  }
+
+  render() {
+    const { isLoading } = this.state;
+    return (
+      <View style={{ flex: 1 }}>
+        <TextInput
+          style={styles.textinput1}
+          onChangeText={query => this.filterData(query)}
+          placeholder="Search items"
+        />
+        <Button onPress={() => {this.fetchData(1); this.render();}} title='reload data' > 
+        </Button>
+        {isLoading ? (
+          <ActivityIndicator size="large" color="blue" />
+        ) : (
+          <FlatList
+            data={this.state.filteredData}
+            renderItem={this.renderItem}
+            keyExtractor={(item) => item.product_id}
+            
+          />
+          
+        )}
+      </View>
+    );
+  }
+}
 
 
 const styles = StyleSheet.create({
@@ -538,5 +636,17 @@ const styles = StyleSheet.create({
       textAlign:'center',
       fontFamily: 'sans-serif',
       fontStyle: 'italic',
-  }
+  },
+  cardContainer: {
+    backgroundColor: 'grey',
+    borderRadius: 8,
+    elevation: 2,
+    margin: 10,
+    padding: 2,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    color:"bcc3cf"
+  },
   });
