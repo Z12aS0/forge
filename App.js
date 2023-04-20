@@ -2,12 +2,14 @@ import React from 'react';
 import {ActivityIndicator, Text, View,StyleSheet, TextInput, Button, ToastAndroid, FlatList, TouchableOpacity} from 'react-native';
 import * as Notifications from 'expo-notifications';
 import * as SecureStore from 'expo-secure-store';
-import forgeconvert from "./forgeconvert.json";
+
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import * as Network from 'expo-network';
+import forgedata_ from "./forgedata.json";
+const forgedata = forgedata_[0];
 
 const BACKGROUND_FETCH_TASK = 'Forge-Background-Task';
 
@@ -72,7 +74,32 @@ async function getuuid(username){
     savedata('uuid', uuid1.id)
     ToastAndroid.show('uuid saved: ' + uuid1.id,ToastAndroid.SHORT);}} catch (e) {
       ToastAndroid.show('Invalid username', ToastAndroid.SHORT);}}
+    function formatNumber(num){
 
+        const formattedNumber = num.toLocaleString();
+        if(num >= 1000 && num < 1000000){
+          return (num/1000).toFixed(2) + "K";
+        }
+        else if (num >= 1000000 && num < 1000000000) {
+          return (num / 1000000).toFixed(2) + "M";
+        }
+    
+        else if (num >= 1000000000) {
+          return (num / 1000000000).toFixed(4) + "B";
+        }
+        else if(num <= -1000 && num > -1000000){
+          return (num/1000).toFixed(2) + "K";
+        }
+        else if(num <= -1000000 && num > -1000000000){
+          return (num/1000000).toFixed(2) + "M";
+        }
+        else if(num <= -1000000000){
+          return (num/1000000000).toFixed(4) + "B";
+        }
+        else {
+          return Math.floor(formattedNumber);
+        }
+      }
 
 
 export default function App() {
@@ -82,6 +109,7 @@ export default function App() {
       <Stack.Screen name="Forge" component={Home}/>
       <Stack.Screen name="Config" component={Config}/>
       <Stack.Screen name="Bazaar" component={Bazaar}/>
+      <Stack.Screen name="Recipes" component={Recipes}/>
      </Stack.Navigator>
     </NavigationContainer>
   );
@@ -162,34 +190,34 @@ async function background(){
 
 if(forge['1']){
   forgeid1 = forge['1'].id.toLowerCase();
-  forgetime1 = 3600000*forgetime*forgeconvert[forge['1'].id];
+  forgetime1 = 3600000*forgetime*forgedata[forge['1'].id].duration;
   forgeend1 = forge['1'].startTime + forgetime1;
   if(forgeend1 - Date.now() > 0){ 
   timeleft = (forgeend1 - 180000 - Date.now())/1000; } else { timeleft = 1; }}
   if(forge['2']){
     forgeid2 = forge['2'].id.toLowerCase();
-    forgetime2 = 3600000*forgetime*forgeconvert[forge['2'].id];
+    forgetime2 = 3600000*forgetime*forgedata[forge['2'].id].duration;
     forgeend2 = forge['2'].startTime + forgetime2;
     if(forgeend2 - Date.now() > 0){ 
     timeleft = (forgeend2 - 180000 - Date.now())/1000; } else { timeleft = 1; }}
   
   if(forge['3']){
     forgeid3 = forge['3'].id.toLowerCase();
-    forgetime3 = 3600000*forgetime*forgeconvert[forge['3'].id];
+    forgetime3 = 3600000*forgetime*forgedata[forge['3'].id].duration;
     forgeend3 = forge['3'].startTime + forgetime3;
     if(forgeend3 - Date.now() > 0){
     timeleft = (forgeend3 - 180000 - Date.now())/1000; } else { timeleft = 1; }}
   
   if(forge['4']){
     forgeid4 = forge['4'].id.toLowerCase();
-    forgetime4 = 3600000*forgetime*forgeconvert[forge['4'].id];
+    forgetime4 = 3600000*forgetime*forgedata[forge['4'].id].duration;
     forgeend4 = forge['4'].startTime + forgetime4;
     if(forgeend4 - Date.now() > 0){ 
     timeleft = (forgeend4 - 180000 - Date.now())/1000; } else { timeleft = 1; }}
   
   if(forge['5']){
     forgeid5 = forge['5'].id.toLowerCase();
-    forgetime5 = 3600000*forgetime*forgeconvert[forge['5'].id];
+    forgetime5 = 3600000*forgetime*forgedata[forge['5'].id].duration;
     forgeend5 = forge['5'].startTime + forgetime5;
     if(forgeend5 - Date.now() > 0){
     timeleft = (forgeend5 - 180000 - Date.now())/1000; } else { timeleft = 1; }} 
@@ -318,7 +346,7 @@ class Home extends React.Component{
 
 if(forge['1']){
   forgeid1 = forge['1'].id.toLowerCase();
-  forgetime1 = 3600000*forgetime*forgeconvert[forge['1'].id];
+  forgetime1 = 3600000*forgetime*forgedata[forge['1'].id].duration;
   forgeend1 = forge['1'].startTime + forgetime1;
   forgeendtime1 = moment(new Date(forgeend1)).format('hh:mm A');
   forgeuntil1 =  moment(forgeend1).fromNow();
@@ -327,7 +355,7 @@ if(forge['1']){
 
 if(forge['2']){
   forgeid2 = forge['2'].id.toLowerCase();
-  forgetime2 = 3600000*forgetime*forgeconvert[forge['2'].id];
+  forgetime2 = 3600000*forgetime*forgedata[forge['2'].id].duration;
   forgeend2 = forge['2'].startTime + forgetime2;
   forgeendtime2 = moment(new Date(forgeend2)).format('hh:mm A');
   forgeuntil2 =  moment(forgeend2).fromNow();
@@ -336,7 +364,7 @@ if(forge['2']){
 
 if(forge['3']){
   forgeid3 = forge['3'].id.toLowerCase();
-  forgetime3 = 3600000*forgetime*forgeconvert[forge['3'].id];
+  forgetime3 = 3600000*forgetime*forgedata[forge['3'].id].duration;
   forgeend3 = forge['3'].startTime + forgetime3;
   forgeendtime3 = moment(new Date(forgeend3)).format('hh:mm A');
   forgeuntil3 =  moment(forgeend3).fromNow();
@@ -345,7 +373,7 @@ if(forge['3']){
 
 if(forge['4']){
   forgeid4 = forge['4'].id.toLowerCase();
-  forgetime4 = 3600000*forgetime*forgeconvert[forge['4'].id];
+  forgetime4 = 3600000*forgetime*forgedata[forge['4'].id].duration;
   forgeend4 = forge['4'].startTime + forgetime4;
   forgeendtime4 = moment(new Date(forgeend4)).format('hh:mm A');
   forgeuntil4 =  moment(forgeend4).fromNow();
@@ -354,7 +382,7 @@ if(forge['4']){
 
 if(forge['5']){
   forgeid5 = forge['5'].id.toLowerCase();
-  forgetime5 = 3600000*forgetime*forgeconvert[forge['5'].id];
+  forgetime5 = 3600000*forgetime*forgedata[forge['5'].id].duration;
   forgeend5 = forge['5'].startTime + forgetime5;
   forgeendtime5 = moment(new Date(forgeend5)).format('hh:mm A');
   forgeuntil5 =  moment(forgeend5).fromNow();
@@ -424,6 +452,13 @@ if(forge['5']){
     title="Bazaar"
     style={{textAlign:'center',backgroundColor:'gray' }}
     onPress={() => this.props.navigation.navigate('Bazaar')}
+    ></Button>
+    </View>
+    <View style={{marginTop:20}}>
+    <Button
+    title="Forge recipes"
+    style={{textAlign:'center',backgroundColor:'gray' }}
+    onPress={() => this.props.navigation.navigate('Recipes')}
     ></Button>
     </View>
     <View style={{marginTop:20}}>
@@ -530,27 +565,10 @@ class Bazaar extends React.Component {
       <TouchableOpacity style={styles.cardContainer} onPress={() => 
       alert("id: " + item.product_id.toLowerCase() + "\nBuy price: " + Math.floor(item.quick_status.sellPrice) + "\nSell price: " + Math.floor(item.quick_status.buyPrice) )}>
         <Text style={styles.text}>{item.product_id.replace(/_/g, ' ').toLowerCase()}</Text>
-        <Text style={styles.text}>Buy Price: {this.formatNumber(item.quick_status.sellPrice)}</Text>
-        <Text style={styles.text}>Sell Price: {this.formatNumber(item.quick_status.buyPrice)}</Text>
+        <Text style={styles.text}>Buy Price: {formatNumber(item.quick_status.sellPrice)}</Text>
+        <Text style={styles.text}>Sell Price: {formatNumber(item.quick_status.buyPrice)}</Text>
       </TouchableOpacity>
     );
-  };
-  formatNumber = (num) => {
-
-    const formattedNumber = num.toLocaleString();
-    if(num >= 1000 && num < 1000000){
-      return (num/1000).toFixed(2) + "K";
-    }
-    else if (num >= 1000000 && num < 1000000000) {
-      return (num / 1000000).toFixed(2) + "M";
-    }
-
-    else if (num >= 1000000000) {
-      return (num / 1000000000).toFixed(4) + "B";
-    }
-    else {
-      return Math.floor(formattedNumber);
-    }
   };
   filterData = (query) => {
     let query1 = query.toLowerCase();
@@ -585,7 +603,128 @@ class Bazaar extends React.Component {
   }
 }
 
+class Recipes extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      materialPrices: {},
+      isLoading:true,
+      searchQuery: ''
+    };
+  }
 
+  componentDidMount() {
+    fetch('https://api.hypixel.net/skyblock/bazaar')
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ materialPrices: data.products, isLoading: false });
+      })
+      .catch(error => console.error(error));
+  }
+
+  getPrice(materialId, amount, mode = 1,buysell = 0) {
+    try{
+      if(mode == 1){
+    if (this.state.materialPrices && this.state.materialPrices[materialId]) {
+      let result =  this.state.materialPrices[materialId].quick_status.sellPrice * amount
+      let result1 = this.state.materialPrices[materialId].quick_status.buyPrice * amount
+      return formatNumber(result) + "/" + formatNumber(result1);
+    }
+    else{
+      return 0
+    }
+    
+  } else {
+    if(buysell)
+    {
+    if (this.state.materialPrices && this.state.materialPrices[materialId]) {
+      let result = this.state.materialPrices[materialId].quick_status.sellPrice * amount
+      return result;
+    }
+  }else{
+    if (this.state.materialPrices && this.state.materialPrices[materialId]) {
+      let result = this.state.materialPrices[materialId].quick_status.buyPrice * amount
+      return result;
+    }
+  }
+  }
+  return 0;
+}
+  catch(a){}
+  }
+  renderMaterial(item) {
+    return (
+      <View>
+        <Text style={{textAlign:"center"}}>
+          {formatNumber(item.amount)} {item.id.toLowerCase().replace(/_/g, ' ')} {this.getPrice(item.id, item.amount)}
+        </Text>
+      </View>
+    );
+  }
+  handleSearch = (query) => {
+    this.setState({ searchQuery: query });
+  }
+  render() {
+    
+    const { isLoading, searchQuery } = this.state;
+    if (isLoading) {
+      return (
+        <View>
+          <ActivityIndicator size="large" color="blue" />
+        </View>
+      );
+    }
+
+    const filteredRecipes = Object.keys(forgedata).filter(item => {
+      const recipe = forgedata[item];
+      return recipe.id.toLowerCase().replace(/_/g, ' ').includes(searchQuery.toLowerCase());
+    });
+
+    return (
+      <View style={{ flex: 1 }}>
+        <TextInput
+          style={styles.textinput1}
+          onChangeText={this.handleSearch}
+          value={searchQuery}
+          placeholder="Search recipes"
+        />
+        <FlatList
+          data={filteredRecipes}
+          renderItem={({ item }) => {
+            let totalValue = 0
+            let totalValue1 = 0
+            for(const material in forgedata[item].materials)
+            {
+              totalValue += this.getPrice(forgedata[item].materials[material].id,forgedata[item].materials[material].amount,0,1)
+              totalValue1 += this.getPrice(forgedata[item].materials[material].id,forgedata[item].materials[material].amount,0,0)
+            }
+            
+            let itemPrice = this.getPrice(item,1,0,1)
+            let itemPrice1 = this.getPrice(item,1,0,0)
+            return (
+              <TouchableOpacity style={styles.cardContainer}>
+                <Text style={{textAlign:"center"}}>Name: {forgedata[item].id.toLowerCase().replace(/_/g, ' ')}</Text>
+                <Text style={{textAlign:"center"}}>Craft price: {formatNumber(totalValue)}/{formatNumber(totalValue1)}(Bazaar only)</Text>
+                <Text style={{textAlign:"center"}}>Bazaar price: {this.getPrice(item,1)}</Text>
+                <Text style={{textAlign:"center"}}>Profit: {formatNumber(itemPrice-totalValue)}/{formatNumber(itemPrice1-totalValue1)}</Text>
+                <Text style={{textAlign:"center"}}>Duration: {forgedata[item].duration} hour(s)</Text>
+                <Text></Text>
+                <FlatList
+                  data={forgedata[item].materials}
+                  keyExtractor={(subItem, index) => index.toString()}
+                  renderItem={({ item: material }) => this.renderMaterial(material)}
+                />
+              </TouchableOpacity>
+            );
+          }}
+          keyExtractor={(item) => forgedata[item].id}
+        />
+      </View>
+    );
+
+}
+
+}
 const styles = StyleSheet.create({
  
  
@@ -638,6 +777,7 @@ const styles = StyleSheet.create({
       fontStyle: 'italic',
   },
   cardContainer: {
+    textAlign:"center",
     backgroundColor: 'grey',
     borderRadius: 8,
     elevation: 2,
