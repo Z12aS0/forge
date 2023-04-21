@@ -340,7 +340,7 @@
 		"id": "GEMSTONE_DRILL_1"
 	},
 	"GEMSTONE_DRILL_2": {
-		"duration": 0.008333333333333334,
+		"duration": 0.0083,
 		"materials": [
 			{
 				"id": "GEMSTONE_DRILL_1",
@@ -354,7 +354,7 @@
 		"id": "GEMSTONE_DRILL_2"
 	},
 	"GEMSTONE_DRILL_3": {
-		"duration": 0.008333333333333334,
+		"duration": 0.0083,
 		"materials": [
 			{
 				"id": "FLAWLESS_TOPAZ_GEM",
@@ -376,7 +376,7 @@
 		"id": "GEMSTONE_DRILL_3"
 	},
 	"GEMSTONE_DRILL_4": {
-		"duration": 0.008333333333333334,
+		"duration": 0.0083,
 		"materials": [
 			{
 				"id": "TREASURITE",
@@ -554,7 +554,7 @@
 		"id": "MITHRIL_DRILL_1"
 	},
 	"MITHRIL_DRILL_2": {
-		"duration": 0.008333333333333334,
+		"duration": 0.0083,
 		"materials": [
 			{
 				"id": "GOLDEN_PLATE",
@@ -942,7 +942,7 @@
 		"id": "TITANIUM_DRILL_1"
 	},
 	"TITANIUM_DRILL_2": {
-		"duration": 0.008333333333333334,
+		"duration": 0.0083,
 		"materials": [
 			{
 				"id": "MITHRIL_PLATE",
@@ -964,7 +964,7 @@
 		"id": "TITANIUM_DRILL_2"
 	},
 	"TITANIUM_DRILL_3": {
-		"duration": 0.008333333333333334,
+		"duration": 0.0083,
 		"materials": [
 			{
 				"id": "REFINED_DIAMOND",
@@ -994,7 +994,7 @@
 		"id": "TITANIUM_DRILL_3"
 	},
 	"TITANIUM_DRILL_4": {
-		"duration": 0.008333333333333334,
+		"duration": 0.0083,
 		"materials": [
 			{
 				"id": "GEMSTONE_MIXTURE",

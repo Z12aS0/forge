@@ -2,7 +2,7 @@
   "expo": {
     "name": "forge",
     "slug": "forge",
-    "version": "1.10.0",
+    "version": "2.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
