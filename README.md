@@ -24,7 +24,7 @@ combine with a phone minecraft launcher for best results
 
 access bazaar data quickly on your phone
 
-view forge recipes and their profit(only items in bazaar bc i aint making api spammer to get ah data
+view forge recipes and their profit
 
 automatically set notification in background(if no internet retries every 5 minutes until internet and if hypixel api fails it retries after 5 sec)
 
