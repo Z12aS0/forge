@@ -158,9 +158,6 @@ export default class Forge extends React.Component {
         } else {
           timeleft.push('1');
         }
-      }
-
-      for (let i = 0; i < 5; i++) {
         SaveData(`cachetime${i}`, forgeend[i].toString());
         SaveData(`cachename${i}`, forgeid[i]);
       }
