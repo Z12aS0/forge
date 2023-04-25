@@ -96,9 +96,6 @@ async function background() {
     } else {
       timeleft.push('1');
     }
-  }
-
-  for (let i = 0; i < 5; i++) {
     SaveData(`cachetime${i}`, forgeend[i].toString());
     SaveData(`cachename${i}`, forgeid[i]);
   }
