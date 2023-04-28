@@ -8,6 +8,7 @@ import { Warn } from '../Utils/Toast';
 
 import { RegisterTask } from '../Utils/BackgroundTask';
 import { ClearNotifications } from '../Utils/Notifications';
+import { GetData, SaveData } from '../Utils/SecureStore';
 
 function Button1({ onPress, title }) {
   return (
@@ -47,6 +48,7 @@ export default class Config extends React.Component {
               RegisterTask(this.state.interval);
             }}
           />
+
         </View>
         <View style={{ alignItems: 'center' }}>
           <TextInput
@@ -64,30 +66,30 @@ export default class Config extends React.Component {
 
 const styles = StyleSheet.create({
   view:
-    {
-      backgroundColor: 'gray',
-      textAlign: 'center',
-    },
+  {
+    backgroundColor: 'gray',
+    textAlign: 'center',
+  },
   text:
-    {
-      fontSize: 15,
-      marginBottom: 8,
-      color: '#bcc3cf',
-      textAlign: 'center',
-      fontFamily: 'sans-serif',
+  {
+    fontSize: 15,
+    marginBottom: 8,
+    color: '#bcc3cf',
+    textAlign: 'center',
+    fontFamily: 'sans-serif',
 
-    },
+  },
   textinput:
-    {
-      backgroundColor: '#595959',
-      textAlign: 'center',
-      width: '85%',
-      borderRadius: 5,
-      color: 'white',
-      padding: 5,
-      fontSize: 16,
-      margin: 5,
-    },
+  {
+    backgroundColor: '#595959',
+    textAlign: 'center',
+    width: '85%',
+    borderRadius: 5,
+    color: 'white',
+    padding: 5,
+    fontSize: 16,
+    margin: 5,
+  },
   button: {
     borderWidth: 1,
     borderColor: 'white',

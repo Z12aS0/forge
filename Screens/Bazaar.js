@@ -93,6 +93,7 @@ export default class Bazaar extends React.Component {
             data={this.state.filteredData}
             renderItem={this.renderItem}
             keyExtractor={(item) => item.product_id}
+            windowSize={10}
           />
 
         )}

@@ -8,7 +8,6 @@ import forgedata_ from '../forgedata.json';
 
 const BACKGROUND_FETCH_TASK = 'Forge-Background-Task';
 const forgedata = forgedata_[0];
-const moment = require('moment');
 
 TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
   if ((await Network.getNetworkStateAsync()).isConnected) {
@@ -19,7 +18,7 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
   waitForConnection();
 });
 
-export async function RegisterTask(interval = 8) {
+async function RegisterTask(interval = 8) {
   const a = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
   if (!a) {
     BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
@@ -34,6 +33,10 @@ export async function RegisterTask(interval = 8) {
   }
 }
 
+async function isRegistered() {
+  return (await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK));
+}
+
 async function waitForConnection() {
   if ((await Network.getNetworkStateAsync()).isConnected) {
     background();
@@ -46,6 +49,7 @@ async function background() {
   try {
     const uuid = await GetData('uuid');
     const apikey = await GetData('apikey');
+    if (apikey != null && uuid != null) return;
     const profiledata1 = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=${apikey}`)
       .then((response) => response.json());
     if (profiledata1.success == true) // is something invalid?
@@ -81,24 +85,38 @@ async function background() {
     }
   } else { quickforge = 1; }
 
-  const forgeendtime = [];
-  const forgeuntil = [];
-  const forgeid = [];
-  const forgeend = [];
+  let forgeid;
+  let forgeend;
   const timeleft = [];
+  let uniqueforges = [];
   for (let i = 0; i < 5; i++) {
-    forgeend.push(forge[i + 1].startTime + 3600000 * quickforge * forgedata[forge[i + 1].id].duration);
-    forgeid.push(forge[i + 1].id.toLowerCase());
-    forgeendtime.push(moment(new Date(forgeend[i])).format('hh:mm A'));
-    forgeuntil.push(moment(forgeend[i]).fromNow());
-    if (forgeend[i] - Date.now() > 0) {
-      timeleft.push((forgeend[i] - 180000 - Date.now()) / 1000);
+    if (!forge[i + 1]) return;
+    forgeend = forge[i + 1].startTime + 3600000 * quickforge * forgedata[forge[i + 1].id].duration;
+    forgeid = forge[i + 1].id.toLowerCase();
+    if (forgeend - Date.now() > 0) {
+      timeleft.push((forgeend - 180000 - Date.now()) / 1000);
     } else {
       timeleft.push('1');
     }
-    SaveData(`cachetime${i}`, forgeend[i].toString());
-    SaveData(`cachename${i}`, forgeid[i]);
+
+    if (!uniqueforges[forgeid]) {
+      uniqueforges[forgeid] = {
+        count: 1,
+        timeLeft: timeleft[i],
+        id: forgeid,
+      };
+    } else {
+      uniqueforges[forgeid].count++;
+      uniqueforges[forgeid].timeleft = timeleft[i];
+    }
+
+
+    SaveData(`cachetime${i}`, forgeend.toString()); SaveData(`cachename${i}`, forgeid);
   }
-  titletex3t = 'Dwarven Forge';
-  Notify(timeleft[0]);
+
+  for (var unique in uniqueforges) {
+    Notify(uniqueforges[unique].timeleft, `${uniqueforges[unique].count} ${uniqueforges[unique].id} is ready!`);
+  }
 }
+
+export { RegisterTask, isRegistered };

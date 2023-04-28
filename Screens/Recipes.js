@@ -4,6 +4,9 @@ import {
 } from 'react-native';
 import forgedata_ from '../forgedata.json';
 import { formatNumber } from '../Utils/Misc';
+import { RadioButton } from 'react-native-paper';
+
+
 
 const forgedata = forgedata_[0];
 
@@ -14,6 +17,7 @@ export default class Recipes extends React.Component {
       materialPrices: {},
       isLoading: true,
       searchQuery: '',
+      sortOption: 'profit',
     };
   }
 
@@ -46,11 +50,7 @@ export default class Recipes extends React.Component {
     return (
       <View>
         <Text style={{ textAlign: 'center' }}>
-          {formatNumber(item.amount)}
-          {' '}
-          {item.id.toLowerCase().replace(/_/g, ' ')}
-          {' '}
-          {this.getPrice(item.id, item.amount)}
+          {formatNumber(item.amount)} {item.id.toLowerCase().replace(/_/g, ' ')} {this.getPrice(item.id, item.amount)}
         </Text>
       </View>
     );
@@ -60,8 +60,11 @@ export default class Recipes extends React.Component {
     this.setState({ searchQuery: query });
   };
 
+
+
+
   render() {
-    const { isLoading, searchQuery } = this.state;
+    const { isLoading, searchQuery, sortOption } = this.state;
     if (isLoading) {
       return (
         <View>
@@ -69,11 +72,62 @@ export default class Recipes extends React.Component {
         </View>
       );
     }
-
-    const filteredRecipes = Object.keys(forgedata).filter((item) => {
+    let filteredRecipes = Object.keys(forgedata).filter((item) => {
       const recipe = forgedata[item];
       return recipe.id.toLowerCase().replace(/_/g, ' ').includes(searchQuery.toLowerCase());
     });
+
+    if (sortOption === 'profit') {
+      filteredRecipes = filteredRecipes.sort((a, b) => {
+        const itemAPrice = this.getPrice(a, 1, 0);
+        const itemBPrice = this.getPrice(b, 1, 0);
+        let totalValueA = 0;
+        let totalValueB = 0;
+        for (const material in forgedata[a].materials) {
+          totalValueA += this.getPrice(forgedata[a].materials[material].id, forgedata[a].materials[material].amount, 0, 1);
+        }
+        for (const material in forgedata[b].materials) {
+          totalValueB += this.getPrice(forgedata[b].materials[material].id, forgedata[b].materials[material].amount, 0, 1);
+        }
+        return (itemBPrice - totalValueB) - (itemAPrice - totalValueA);
+      });
+    } else if (sortOption === 'craftPrice') {
+      filteredRecipes = filteredRecipes.sort((a, b) => {
+        let totalValueA = 0;
+        for (const material in forgedata[a].materials) {
+          totalValueA += this.getPrice(forgedata[a].materials[material].id, forgedata[a].materials[material].amount, 0, 1);
+        }
+
+        let totalValueB = 0;
+        for (const material in forgedata[b].materials) {
+          totalValueB += this.getPrice(forgedata[b].materials[material].id, forgedata[b].materials[material].amount, 0, 1);
+        }
+
+        return totalValueB - totalValueA;
+      });
+    } else if (sortOption === 'marketPrice') {
+      filteredRecipes = filteredRecipes.sort((a, b) => {
+        const itemAPrice = this.getPrice(a, 1, 0);
+        const itemBPrice = this.getPrice(b, 1, 0);
+        return itemBPrice - itemAPrice;
+      });
+    } else if (sortOption === 'profith') {
+      filteredRecipes = filteredRecipes.sort((a, b) => {
+        const itemAPrice = this.getPrice(a, 1, 0);
+        let totalValueA = 0;
+        for (const material in forgedata[a].materials) {
+          totalValueA += this.getPrice(forgedata[a].materials[material].id, forgedata[a].materials[material].amount, 0, 1);
+        }
+
+        const itemBPrice = this.getPrice(b, 1, 0);
+        let totalValueB = 0;
+        for (const material in forgedata[b].materials) {
+          totalValueB += this.getPrice(forgedata[b].materials[material].id, forgedata[b].materials[material].amount, 0, 1);
+        }
+
+        return (itemBPrice - totalValueB) / forgedata[b].duration - (itemAPrice - totalValueA) / forgedata[a].duration;
+      });
+    }
 
     return (
       <View style={{ flex: 1 }}>
@@ -85,6 +139,32 @@ export default class Recipes extends React.Component {
             placeholder="Search recipes"
           />
         </View>
+        <View>
+          <Text style={styles.text}>Sort by:</Text>
+          <View style={{ marginBottom: 120 }}>
+            <RadioButton.Group
+              onValueChange={(value) => this.setState({ sortOption: value })}
+              value={sortOption}
+            >
+              <View style={{ ...styles.radiobutton, position: "absolute", left: "0%", top: 10, maxWidth: 90 }}>
+                <RadioButton color="#b3b3b3" value="profit" />
+                <Text style={{ fontSize: 16 }}>Profit</Text>
+              </View>
+              <View style={{ ...styles.radiobutton, position: "absolute", left: "25%", top: 10, maxWidth: 90 }}>
+                <RadioButton value="craftPrice" color="#b3b3b3" />
+                <Text style={{ fontSize: 16 }}>Craft Price</Text>
+              </View>
+              <View style={{ ...styles.radiobutton, position: "absolute", left: "50%", top: 10, maxWidth: 90 }}>
+                <RadioButton value="marketPrice" color="#b3b3b3" />
+                <Text style={{ fontSize: 16 }}>Market Price</Text>
+              </View>
+              <View style={{ ...styles.radiobutton, position: "absolute", left: "75%", top: 10, maxWidth: 90 }}>
+                <RadioButton value="profith" color="#b3b3b3" />
+                <Text style={{ fontSize: 16 }}>Profit/h</Text>
+              </View>
+            </RadioButton.Group>
+          </View>
+        </View >
 
         <FlatList
           data={filteredRecipes}
@@ -116,27 +196,31 @@ export default class Recipes extends React.Component {
                 <Text style={{ textAlign: 'center' }}>
                   Duration:
                   {forgedata[item].duration}
-                  {' '}
-                  hour(s) (
-                  {formatNumber((itemPrice - totalValue) / forgedata[item].duration)}
-                  {' '}
-                  per hour)
+                  hour(s) ({formatNumber((itemPrice - totalValue) / forgedata[item].duration)}/hour)
                 </Text>
                 <Text />
                 <FlatList
                   data={forgedata[item].materials}
-                  keyExtractor={(subItem, index) => index.toString()}
+                  keyExtractor={(item) => { item.id }}
                   renderItem={({ item: material }) => this.renderMaterial(material)}
                 />
+
               </TouchableOpacity>
             );
           }}
           keyExtractor={(item) => forgedata[item].id}
+          windowSize={10}
         />
-      </View>
+      </View >
     );
   }
 }
+
+/*
+
+*/
+
+
 
 const styles = StyleSheet.create({
   textinput: {
@@ -145,9 +229,19 @@ const styles = StyleSheet.create({
     width: '85%',
     borderRadius: 5,
     color: 'white',
+    fontSize: 16,
+    margin: 5,
+  },
+  radiobutton: {
+    backgroundColor: '#595959',
+    textAlign: 'center',
+    width: 150,
+    borderRadius: 5,
+    color: 'white',
     padding: 5,
     fontSize: 16,
     margin: 5,
+    marginRight: 1,
   },
   cardContainer: {
     textAlign: 'center',
@@ -161,5 +255,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2,
     color: 'bcc3cf',
+  },
+  text:
+  {
+    fontSize: 15,
+    marginBottom: 8,
+    color: '#bcc3cf',
+    textAlign: 'center',
+    fontFamily: 'sans-serif',
+
   },
 });
