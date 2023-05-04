@@ -30,16 +30,17 @@ export default class Recipes extends React.Component {
       .catch((error) => console.error(error));
   }
 
-  getPrice(materialId, amount, mode = 1) {
+  getPrice = (materialId, amount, mode = 1) => {
+    let { prices } = this.state
     try {
       if (mode == 1) {
         // mode 1 is formatted result and mode 0 is raw result
 
-        if (this.state.prices && this.state.prices[materialId]) {
-          return formatNumber(this.state.prices[materialId] * amount);
+        if (prices && prices[materialId]) {
+          return formatNumber(prices[materialId] * amount);
         }
-      } else if (this.state.prices && this.state.prices[materialId]) {
-        const result = this.state.prices[materialId] * amount;
+      } else if (prices && prices[materialId]) {
+        const result = prices[materialId] * amount;
         return result;
       }
       return 0;
@@ -59,6 +60,44 @@ export default class Recipes extends React.Component {
   handleSearch = (query) => {
     this.setState({ searchQuery: query });
   };
+
+  getPriceRaw = (item, formatted = 0) => {
+    let raw = 0
+    if (forgedata[item]) {
+      for (let material of forgedata[item].materials) {
+        if (forgedata[material.id]) {
+          raw += this.getPriceRaw(material.id);
+        } else {
+          raw += this.getPrice(material.id, material.amount, 0);
+        }
+      }
+    } else {
+      raw += this.getPrice(material.id, material.amount, 0);
+    }
+
+    if (formatted) {
+      return formatNumber(raw);
+    } else {
+      return raw;
+    }
+  };
+
+  getTotalDuration = (item) => {
+    let duration = forgedata[item].duration
+    if (forgedata[item]) {
+      for (let material of forgedata[item].materials) {
+        if (forgedata[material.id]) {
+          duration += this.getTotalDuration(material.id)
+        } else {
+          duration += forgedata[item].duration
+        }
+      }
+    } else {
+      return 0
+    }
+    return Math.floor(duration * 100) / 100;
+  };
+
 
 
 
@@ -129,8 +168,9 @@ export default class Recipes extends React.Component {
       });
     }
 
+
     return (
-      <View style={{ flex: 1 }}>
+      <View>
         <View style={{ alignItems: 'center' }}>
           <TextInput
             style={styles.textinput}
@@ -141,7 +181,7 @@ export default class Recipes extends React.Component {
         </View>
         <View>
           <Text style={styles.text}>Sort by:</Text>
-          <View style={{ marginBottom: 120 }}>
+          <View style={{ marginBottom: 100 }}>
             <RadioButton.Group
               onValueChange={(value) => this.setState({ sortOption: value })}
               value={sortOption}
@@ -196,12 +236,23 @@ export default class Recipes extends React.Component {
                 <Text style={{ textAlign: 'center' }}>
                   Duration:
                   {forgedata[item].duration}
-                  hour(s) ({formatNumber((itemPrice - totalValue) / forgedata[item].duration)}/hour)
+                  hour(s) ({formatNumber((itemPrice - totalValue) / forgedata[item].duration)}/hour) {'\n'}
+                </Text>
+                <Text style={{ textAlign: 'center' }}>
+                  Craft Price(raw materials): {this.getPriceRaw(item, 1)}
+                </Text>
+                <Text style={{ textAlign: 'center' }}>
+                  Raw profit:
+                  {formatNumber(itemPrice - this.getPriceRaw(item))}
+                </Text>
+                <Text style={{ textAlign: 'center' }}>
+                  Total duration:
+                  {this.getTotalDuration(item)}h ({formatNumber((itemPrice - this.getPriceRaw(item)) / (0.001 + this.getTotalDuration(item)))}/h)
                 </Text>
                 <Text />
                 <FlatList
                   data={forgedata[item].materials}
-                  keyExtractor={(item) => { item.id }}
+                  keyExtractor={(item) => item.id}
                   renderItem={({ item: material }) => this.renderMaterial(material)}
                 />
 

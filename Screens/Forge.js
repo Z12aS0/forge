@@ -22,7 +22,6 @@ let forgeid;
 let forgeend;
 
 let heavypearldisplay;
-let heavypearldisplay1;
 let godpotdisplay;
 let quickforge;
 
@@ -157,7 +156,7 @@ export default class Forge extends React.Component {
         if (forgeend - Date.now() > 0) {
           timeleft.push((forgeend - 180000 - Date.now()) / 1000);
         } else {
-          timeleft.push("1");
+          timeleft.push(1);
         }
         /// ///////
         displaydata.push({
@@ -228,7 +227,6 @@ export default class Forge extends React.Component {
           style={{
             paddingTop: 20,
             fontSize: 20,
-            fontStyle: "bold",
             color: "cyan",
             fontWeight: "bold",
             textAlign: "center",
@@ -244,8 +242,7 @@ export default class Forge extends React.Component {
           {`${godpotdisplay}h`}
         </Text>
         <Text style={styles.text}>
-          Heavy Pearls:
-          {heavypearldisplay1} {heavypearldisplay}
+          Heavy Pearls: {heavypearldisplay}
         </Text>
         <View style={{ marginTop: 20 }}>
           <Button1

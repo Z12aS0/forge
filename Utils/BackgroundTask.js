@@ -18,23 +18,25 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
   waitForConnection();
 });
 
-async function RegisterTask(interval = 8) {
-  const a = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
+
+
+
+
+export async function RegisterTask(interval = 8) {
+
+  let a = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
   if (!a) {
     BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-      minimumInterval: 60 * 60 * interval, // 8h default
-      stopOnTerminate: false,
-      startOnBoot: true,
+      //minimumInterval: 60 * 60 * interval, //8h default
+      minimumInterval: 1,
+      stopOnTerminate: false, startOnBoot: true
     });
     Warn(`Toggled on(interval:${interval}h)`);
   } else {
     BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
     Warn('Toggled off');
   }
-}
 
-async function isRegistered() {
-  return (await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK));
 }
 
 async function waitForConnection() {
@@ -115,8 +117,7 @@ async function background() {
   }
 
   for (var unique in uniqueforges) {
-    Notify(uniqueforges[unique].timeleft, `${uniqueforges[unique].count} ${uniqueforges[unique].id} is ready!`);
+    //Notify(uniqueforges[unique].timeleft, `${uniqueforges[unique].count} ${uniqueforges[unique].id} is ready!`);
   }
+  Notify()
 }
-
-export { RegisterTask, isRegistered };

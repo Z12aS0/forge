@@ -4,16 +4,6 @@ import {
 } from 'react-native';
 import { formatNumber } from '../Utils/Misc';
 
-function Button1({ onPress, title }) {
-  return (
-    <View style={{ alignItems: 'center' }}>
-      <TouchableOpacity onPress={onPress} style={styles.button}>
-        <Text style={styles.text}>{title}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
 export default class Bazaar extends React.Component {
   constructor(props) {
     super(props);
@@ -85,7 +75,6 @@ export default class Bazaar extends React.Component {
             placeholder="Search items"
           />
         </View>
-        <Button1 onPress={() => { this.fetchData(1); this.render(); }} title="reload data" />
         {isLoading ? (
           <ActivityIndicator size="large" color="blue" />
         ) : (
