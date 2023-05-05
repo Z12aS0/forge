@@ -1,4 +1,7 @@
 export function formatNumber(num) {
+  if (num == undefined || num == null) {
+    return 0
+  }
   if (num >= 1000 && num < 1000000) {
     return `${(num / 1000).toFixed(2)}K`;
   }

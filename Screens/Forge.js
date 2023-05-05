@@ -22,8 +22,9 @@ let forgeid;
 let forgeend;
 
 let heavypearldisplay;
-let godpotdisplay;
+let godpotdisplay = "";
 let quickforge;
+let emptyForge;
 
 const moment = require("moment");
 const forgedata = forgedata_[0];
@@ -118,9 +119,13 @@ export default class Forge extends React.Component {
         </View>
       );
     }
+
     if (this.state.uuid != null && this.state.profiledata != null) {
       const profiledata = this.state.profiledata.members[this.state.uuid];
       const forge = profiledata.forge.forge_processes.forge_1;
+      if (forge == undefined) {
+        emptyForge = true
+      }
 
       // matriarch
       if (profiledata.nether_island_player_data.matriarch.last_attempt) {
@@ -131,7 +136,7 @@ export default class Forge extends React.Component {
 
       // god pot
       if (profiledata.active_effects.length > 28) {
-        godpotdisplay = Math.round((profiledata.active_effects[0].ticks_remaining / 72000) * 100) / 100;
+        godpotdisplay = (Math.round((profiledata.active_effects[0].ticks_remaining / 72000) * 100) / 100) + "h";
       }
 
       // quickforge
@@ -145,51 +150,51 @@ export default class Forge extends React.Component {
       } else {
         quickforge = 1;
       }
+      if (!emptyForge) {
+        // data
+        for (let i = 0; i < 5; i++) {
+          if (!forge[i + 1]) continue
+          forgeend = forge[i + 1].startTime + 3600000 * quickforge * forgedata[forge[i + 1].id].duration;
+          forgeid = forge[i + 1].id.toLowerCase();
+          forgeendtime = moment(new Date(forgeend)).format("hh:mm A");
+          forgeuntil = moment(forgeend).fromNow();
+          if (forgeend - Date.now() > 0) {
+            timeleft.push((forgeend - 180000 - Date.now()) / 1000);
+          } else {
+            timeleft.push(1);
+          }
+          /// ///////
+          displaydata.push({
+            forgeid,
+            forgeendtime,
+            forgeuntil,
+            time: forgeend,
+          });
+          displaydata.slice(0, 5);
 
-      // data
-      for (let i = 0; i < 5; i++) {
-        if (!forge[i + 1]) return
-        forgeend = forge[i + 1].startTime + 3600000 * quickforge * forgedata[forge[i + 1].id].duration;
-        forgeid = forge[i + 1].id.toLowerCase();
-        forgeendtime = moment(new Date(forgeend)).format("hh:mm A");
-        forgeuntil = moment(forgeend).fromNow();
-        if (forgeend - Date.now() > 0) {
-          timeleft.push((forgeend - 180000 - Date.now()) / 1000);
-        } else {
-          timeleft.push(1);
+          /// //////
+          if (!uniqueforges[forgeid]) {
+            uniqueforges[forgeid] = {
+              count: 1,
+              timeLeft: timeleft[i],
+              id: forgeid,
+            };
+          } else {
+            uniqueforges[forgeid].count++;
+            uniqueforges[forgeid].timeleft = timeleft[i];
+          }
+          /// //////
+          SaveData(`cachetime${i}`, forgeend.toString());
+          SaveData(`cachename${i}`, forgeid);
         }
-        /// ///////
-        displaydata.push({
-          forgeid,
-          forgeendtime,
-          forgeuntil,
-          time: forgeend,
-        });
-        displaydata.slice(0, 5);
 
-        /// //////
-        if (!uniqueforges[forgeid]) {
-          uniqueforges[forgeid] = {
-            count: 1,
-            timeLeft: timeleft[i],
-            id: forgeid,
-          };
-        } else {
-          uniqueforges[forgeid].count++;
-          uniqueforges[forgeid].timeleft = timeleft[i];
+        for (const unique in uniqueforges) {
+          Notify(
+            uniqueforges[unique].timeleft,
+            `${uniqueforges[unique].count} ${uniqueforges[unique].id} is ready!`
+          );
         }
-        /// //////
-        SaveData(`cachetime${i}`, forgeend.toString());
-        SaveData(`cachename${i}`, forgeid);
       }
-
-      for (const unique in uniqueforges) {
-        Notify(
-          uniqueforges[unique].timeleft,
-          `${uniqueforges[unique].count} ${uniqueforges[unique].id} is ready!`
-        );
-      }
-
       titletext = "Dwarven Forge";
     } else {
       try {
@@ -239,7 +244,7 @@ export default class Forge extends React.Component {
         <View style={{ marginTop: 10 }} />
         <Text style={styles.text}>
           God potion remaining:
-          {`${godpotdisplay}h`}
+          {`${godpotdisplay}`}
         </Text>
         <Text style={styles.text}>
           Heavy Pearls: {heavypearldisplay}

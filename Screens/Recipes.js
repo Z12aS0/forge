@@ -218,7 +218,6 @@ export default class Recipes extends React.Component {
             return (
               <TouchableOpacity style={styles.cardContainer}>
                 <Text style={{ textAlign: 'center' }}>
-                  Name:
                   {forgedata[item].id.toLowerCase().replace(/_/g, ' ')}
                 </Text>
                 <Text style={{ textAlign: 'center' }}>
@@ -239,7 +238,7 @@ export default class Recipes extends React.Component {
                   hour(s) ({formatNumber((itemPrice - totalValue) / forgedata[item].duration)}/hour) {'\n'}
                 </Text>
                 <Text style={{ textAlign: 'center' }}>
-                  Craft Price(raw materials): {this.getPriceRaw(item, 1)}
+                  Craft price(raw materials): {this.getPriceRaw(item, 1)}
                 </Text>
                 <Text style={{ textAlign: 'center' }}>
                   Raw profit:
