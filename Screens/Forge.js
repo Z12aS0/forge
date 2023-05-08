@@ -4,9 +4,9 @@ import {
   Text,
   View,
   StyleSheet,
-  TouchableOpacity,
-  FlatList,
 } from "react-native";
+
+
 
 import { Notify } from "../Utils/Notifications";
 import { GetData, SaveData } from "../Utils/SecureStore";
@@ -14,6 +14,7 @@ import { Warn } from "../Utils/Toast";
 
 import forgedata_ from "../forgedata.json";
 import { GetProfile } from "../Utils/ApiUtils";
+import { Button1, FlatList1 } from "../Utils/Renders"
 
 let titletext;
 let forgeendtime;
@@ -29,40 +30,7 @@ let emptyForge;
 const moment = require("moment");
 const forgedata = forgedata_[0];
 
-function Button1({ onPress, title }) {
-  return (
-    <View style={{ alignItems: "center" }}>
-      <TouchableOpacity onPress={onPress} style={styles.button}>
-        <Text style={styles.text}>{title}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
 
-function FlatList1({ data }) {
-  let hasForges = true
-  if (data == "") hasForges = false
-  return (
-    <View>
-      {hasForges ? (
-        <FlatList
-          data={data}
-          keyExtractor={(item) => item.time}
-          renderItem={({ item }) => (
-            <View>
-              <Text style={styles.text}>
-                {item.forgeid} ending at: {item.forgeendtime} ({item.forgeuntil})
-              </Text>
-            </View>
-          )}
-        />
-      ) : (
-        <Text style={styles.text}>Forge is empty :(</Text>
-      )}
-    </View>
-
-  );
-}
 
 export default class Forge extends React.Component {
   state = {

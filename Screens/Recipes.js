@@ -5,6 +5,7 @@ import {
 import forgedata_ from '../forgedata.json';
 import { formatNumber } from '../Utils/Misc';
 import { RadioButton } from 'react-native-paper';
+import { ShowMore } from '../Utils/Renders';
 
 
 
@@ -115,7 +116,6 @@ export default class Recipes extends React.Component {
       const recipe = forgedata[item];
       return recipe.id.toLowerCase().replace(/_/g, ' ').includes(searchQuery.toLowerCase());
     });
-
     if (sortOption === 'profit') {
       filteredRecipes = filteredRecipes.sort((a, b) => {
         const itemAPrice = this.getPrice(a, 1, 0);
@@ -237,17 +237,24 @@ export default class Recipes extends React.Component {
                   {forgedata[item].duration}
                   hour(s) ({formatNumber((itemPrice - totalValue) / forgedata[item].duration)}/hour) {'\n'}
                 </Text>
-                <Text style={{ textAlign: 'center' }}>
-                  Craft price(raw materials): {this.getPriceRaw(item, 1)}
-                </Text>
-                <Text style={{ textAlign: 'center' }}>
-                  Raw profit:
-                  {formatNumber(itemPrice - this.getPriceRaw(item))}
-                </Text>
-                <Text style={{ textAlign: 'center' }}>
-                  Total duration:
-                  {this.getTotalDuration(item)}h ({formatNumber((itemPrice - this.getPriceRaw(item)) / (0.001 + this.getTotalDuration(item)))}/h)
-                </Text>
+                <ShowMore
+                  showText='Show raw profit'
+                  hideText='Hide'
+                  content={
+                    <View>
+                      <Text style={{ textAlign: 'center' }}>
+                        Craft price(raw materials): {this.getPriceRaw(item, 1)}
+                      </Text>
+                      <Text style={{ textAlign: 'center' }}>
+                        Raw profit:
+                        {formatNumber(itemPrice - this.getPriceRaw(item))}
+                      </Text>
+                      <Text style={{ textAlign: 'center' }}>
+                        Total duration:
+                        {this.getTotalDuration(item)}h ({formatNumber((itemPrice - this.getPriceRaw(item)) / (0.001 + this.getTotalDuration(item)))}/h)
+                      </Text>
+                    </View>
+                  } />
                 <Text />
                 <FlatList
                   data={forgedata[item].materials}
@@ -266,9 +273,6 @@ export default class Recipes extends React.Component {
   }
 }
 
-/*
-
-*/
 
 
 

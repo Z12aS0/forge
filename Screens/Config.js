@@ -1,24 +1,16 @@
 import React from 'react';
 import {
-  View, StyleSheet, TextInput, TouchableOpacity, Text,
+  View, StyleSheet, TextInput,
 } from 'react-native';
 
 import { getapikey, getuuid } from '../Utils/ApiUtils';
 import { Warn } from '../Utils/Toast';
 
+
 import { RegisterTask } from '../Utils/BackgroundTask';
 import { ClearNotifications } from '../Utils/Notifications';
-import { GetData, SaveData } from '../Utils/SecureStore';
+import { Button1 } from '../Utils/Renders';
 
-function Button1({ onPress, title }) {
-  return (
-    <View style={{ alignItems: 'center' }}>
-      <TouchableOpacity onPress={onPress} style={styles.button}>
-        <Text style={styles.text}>{title}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
 
 export default class Config extends React.Component {
   state = {

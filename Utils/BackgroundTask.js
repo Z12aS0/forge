@@ -1,6 +1,6 @@
 import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
-import Network from 'expo-network';
+import * as Network from "expo-network"
 import { GetData, SaveData } from './SecureStore';
 import { Warn } from './Toast';
 import { Notify } from './Notifications';
@@ -8,9 +8,8 @@ import forgedata_ from '../forgedata.json';
 
 const BACKGROUND_FETCH_TASK = 'Forge-Background-Task';
 const forgedata = forgedata_[0];
-
 TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
-  if ((await Network.getNetworkStateAsync()).isConnected) {
+  if (await Network.getNetworkStateAsync.isInternetReachable) {
     background();
     return BackgroundFetch.BackgroundFetchResult.NewData;
   }
@@ -23,12 +22,10 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
 
 
 export async function RegisterTask(interval = 8) {
-
   let a = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
   if (!a) {
     BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-      //minimumInterval: 60 * 60 * interval, //8h default
-      minimumInterval: 1,
+      minimumInterval: 60 * 60 * interval, //8h default
       stopOnTerminate: false, startOnBoot: true
     });
     Warn(`Toggled on(interval:${interval}h)`);
@@ -40,7 +37,7 @@ export async function RegisterTask(interval = 8) {
 }
 
 async function waitForConnection() {
-  if ((await Network.getNetworkStateAsync()).isConnected) {
+  if (await Network.getNetworkStateAsync.isInternetReachable) {
     background();
   } else {
     setTimeout(waitForConnection, 300000); // 5min
@@ -51,7 +48,7 @@ async function background() {
   try {
     const uuid = await GetData('uuid');
     const apikey = await GetData('apikey');
-    if (apikey != null && uuid != null) return;
+    if (apikey == null || uuid == null) return;
     const profiledata1 = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=${apikey}`)
       .then((response) => response.json());
     if (profiledata1.success == true) // is something invalid?
@@ -62,11 +59,12 @@ async function background() {
           var profiledata = profiledata1.profiles[i].members[uuid]; // success
           break;
         }
+
       }
     } else {
       if (profiledata1.cause == 'Malformed UUID') { Notify(undefined, 'Failed to execute auto notification: invalid UUID', 1); return; }
-
       if (profiledata1.cause == 'Invalid API key') { Notify(undefined, 'Failed to execute auto notification: Invalid API key', 1); return; }
+
       setTimeout(background, 5000); return;
     } // "Hypixel api is under maintenance" :nerd: :nerd: :clown:
   } catch (a) {
@@ -117,7 +115,6 @@ async function background() {
   }
 
   for (var unique in uniqueforges) {
-    //Notify(uniqueforges[unique].timeleft, `${uniqueforges[unique].count} ${uniqueforges[unique].id} is ready!`);
+    Notify(uniqueforges[unique].timeleft, `${uniqueforges[unique].count} ${uniqueforges[unique].id} is ready!`);
   }
-  Notify()
 }
