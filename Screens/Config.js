@@ -3,13 +3,13 @@ import {
   View, StyleSheet, TextInput,
 } from 'react-native';
 
-import { getapikey, getuuid } from '../Utils/ApiUtils';
+import { getuuid } from '../Utils/ApiUtils';
 import { Warn } from '../Utils/Toast';
 
 
 import { RegisterTask } from '../Utils/BackgroundTask';
 import { ClearNotifications } from '../Utils/Notifications';
-import { Button1 } from '../Utils/Renders';
+import { Button1 } from '../Renders/Button';
 
 
 export default class Config extends React.Component {
@@ -21,7 +21,6 @@ export default class Config extends React.Component {
     return (
       <View style={{ marginTop: 20, backgroundColor: '#242323' }}>
         <View style={{ alignItems: 'center' }}>
-          <TextInput style={styles.textinput} placeholder="api key" onSubmitEditing={(event) => { getapikey(event.nativeEvent.text); }} />
           <TextInput style={styles.textinput} placeholder="username" onSubmitEditing={(event) => { getuuid(event.nativeEvent.text); }} />
         </View>
 

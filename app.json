@@ -2,7 +2,7 @@
   "expo": {
     "name": "forge",
     "slug": "forge",
-    "version": "2.2",
+    "version": "2.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,7 +18,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.z12as.forge"
     },
     "android": {
       "adaptiveIcon": {

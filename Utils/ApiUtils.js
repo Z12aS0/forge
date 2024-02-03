@@ -1,21 +1,5 @@
 import { Warn } from './Toast';
 import { SaveData } from './SecureStore';
-async function getapikey(apikey) {
-  try {
-    const apikey1 = await fetch(`https://api.hypixel.net/key?key=${apikey}`).then((response) => response.json());
-    if (apikey1.success == true) {
-      SaveData('apikey', apikey);
-      Warn(`api key saved: ${apikey}`);
-    } else {
-      Warn('Invalid api key');
-      if (apikey == '') {
-        SaveData('apikey', '');
-      }
-    }
-  } catch (e) {
-    Warn('Error, failed to check api key validity.');
-  }
-}
 
 async function getuuid(username) {
   try {
@@ -29,26 +13,27 @@ async function getuuid(username) {
   }
 }
 
-async function GetProfile(uuid, apikey) {
+async function GetProfile(uuid) {
   try {
-    if (uuid && apikey) {
+    if (uuid) {
       try {
-        const profiledata1 = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=${apikey}`)
+        const profiledata = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=4e927d63a1c34f71b56428b2320cbf95`)
           .then((response) => response.json());
-        if (profiledata1.success == true) // is something invalid?
+        if (profiledata.success == true && profiledata.profiles != null) // is something invalid?
         {
           for (let i = 0; i < 69; i++) // get selected profile
           {
-            if (profiledata1.profiles[i].selected == true) {
-              var profiledata = profiledata1.profiles[i];
-              break;
+            if (profiledata.profiles[i].selected == true) {
+              return profiledata.profiles[i]; //success
             }
           }
-        } else if (profiledata1.cause == 'Malformed UUID') {
+        } else if (profiledata.cause == 'Malformed UUID') {
           alert('Invalid UUID');
           return null;
-        } else if (profiledata1.cause == 'Invalid API key') {
+        } else if (profiledata.cause == 'Invalid API key') {
           alert('Invalid api key');
+          return null;
+        } else {
           return null;
         }
       } catch (a) {
@@ -60,8 +45,6 @@ async function GetProfile(uuid, apikey) {
           return null;
         }
       }
-      // success
-      return profiledata;
     } else {
       return null;
     }
@@ -71,4 +54,4 @@ async function GetProfile(uuid, apikey) {
   }
 }
 
-export { getapikey, getuuid, GetProfile };
+export { getuuid, GetProfile };

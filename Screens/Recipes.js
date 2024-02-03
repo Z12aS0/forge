@@ -5,7 +5,7 @@ import {
 import forgedata_ from '../forgedata.json';
 import { formatNumber } from '../Utils/Misc';
 import { RadioButton } from 'react-native-paper';
-import { ShowMore } from '../Utils/Renders';
+import { ShowMore } from '../Renders/ShowMore';
 
 
 
