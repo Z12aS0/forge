@@ -14,8 +14,8 @@ combine with a phone minecraft launcher for best results
 
 # screenshots
 
-<img src="https://cdn.discordapp.com/attachments/601086858021306398/1098997662692425829/Screenshot_20230421_184341_forge.jpg" width="180" height="320" alt="Main page"> <img src="https://cdn.discordapp.com/attachments/601086858021306398/1098997662147162202/Screenshot_20230421_184349_forge.jpg" width="180" height="320" alt="Bazaar">
-<img src="https://cdn.discordapp.com/attachments/601086858021306398/1098997661723541564/Screenshot_20230421_184354_forge.jpg" width="180" height="320" alt="Forge recipes"> <img src="https://cdn.discordapp.com/attachments/601086858021306398/1098997662444945570/Screenshot_20230421_184345_forge.jpg" width="180" height="320" alt="Config">
+<img src="https://cdn.discordapp.com/attachments/963099746254336021/1203295715368112188/Screenshot_20240203_130508_forge.jpg" width="180" height="320" alt="Main page"> <img src="https://cdn.discordapp.com/attachments/601086858021306398/1098997662147162202/Screenshot_20230421_184349_forge.jpg" width="180" height="320" alt="Bazaar">
+<img src="https://cdn.discordapp.com/attachments/601086858021306398/1098997661723541564/Screenshot_20230421_184354_forge.jpg" width="180" height="320" alt="Forge recipes"> <img src="https://cdn.discordapp.com/attachments/963099746254336021/1203295714986426428/Screenshot_20240203_130518_forge.jpg" width="180" height="320" alt="Config">
 
 
 
