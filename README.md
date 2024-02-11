@@ -34,7 +34,7 @@ get api key from hypixel(/api new)
 
 supports all forge items and their durations
 
-most dead discord server ever: https://discord.gg/ssEuNYkzpe
+most dead discord server ever: https://discord.gg/WmVUPPqafZ
 
 
 # how to build yourself
