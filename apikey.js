@@ -1,3 +1,1 @@
-export function api() {
-    return "apikeyhere"
-} 
+export const apikey = "apikeyhere"
