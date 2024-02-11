@@ -1,6 +1,6 @@
 import { Warn } from './Toast';
 import { SaveData } from './SecureStore';
-import { api } from '../apikey';
+import { api } from '../apikey.js';
 
 
 async function getuuid(username) {

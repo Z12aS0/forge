@@ -5,7 +5,7 @@ import { GetData, SaveData } from './SecureStore';
 import { Warn } from './Toast';
 import { Notify } from './Notifications';
 import forgedata_ from '../forgedata.json';
-import { api } from '../apikey';
+import { api } from '../apikey.js';
 
 
 const BACKGROUND_FETCH_TASK = 'Forge-Background-Task';
