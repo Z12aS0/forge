@@ -1,6 +1,6 @@
 import { Warn } from './Toast';
 import { SaveData } from './SecureStore';
-import { api } from '../apikey.js';
+import { apikey } from '../apikey';
 
 
 async function getuuid(username) {
@@ -20,7 +20,7 @@ async function GetProfile(uuid) {
   try {
     if (uuid) {
       try {
-        const profiledata = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=${api()}`)
+        const profiledata = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=${apikey}`)
           .then((response) => response.json());
         if (profiledata.success == true && profiledata.profiles != null) // is something invalid?
         {
