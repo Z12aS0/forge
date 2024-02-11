@@ -1,8 +1,11 @@
 import { Warn } from './Toast';
 import { SaveData } from './SecureStore';
+import { api } from '../apikey';
+
 
 async function getuuid(username) {
   try {
+    let apikey = require("../a")
     const uuid1 = await fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`).then((response) => response.json());
     if (uuid1 != '') {
       SaveData('uuid', uuid1.id);
@@ -17,7 +20,7 @@ async function GetProfile(uuid) {
   try {
     if (uuid) {
       try {
-        const profiledata = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=4e927d63a1c34f71b56428b2320cbf95`)
+        const profiledata = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=${api()}`)
           .then((response) => response.json());
         if (profiledata.success == true && profiledata.profiles != null) // is something invalid?
         {

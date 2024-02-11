@@ -5,6 +5,8 @@ import { GetData, SaveData } from './SecureStore';
 import { Warn } from './Toast';
 import { Notify } from './Notifications';
 import forgedata_ from '../forgedata.json';
+import { api } from '../apikey';
+
 
 const BACKGROUND_FETCH_TASK = 'Forge-Background-Task';
 const forgedata = forgedata_[0];
@@ -48,7 +50,7 @@ async function background() {
   try {
     const uuid = await GetData('uuid');
     if (!uuid) return;
-    const profiledata1 = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=4e927d63a1c34f71b56428b2320cbf95`)
+    const profiledata1 = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=${api()}`)
       .then((response) => response.json());
     if (profiledata1.success == true && profiledata1.profiles != null) // is something invalid?
     {

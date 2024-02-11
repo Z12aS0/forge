@@ -5,7 +5,8 @@ import {
   View,
   StyleSheet,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Linking
 } from "react-native";
 
 
@@ -19,6 +20,7 @@ import { GetProfile } from "../Utils/ApiUtils";
 
 //import { Button1 } from "../Renders/Button";
 import { FlatList1 } from "../Renders/FlatList"
+import { CheckForUpdate } from "../Utils/Update";
 
 let titletext;
 let forgeendtime;
@@ -55,7 +57,7 @@ export default class Forge extends React.Component {
         cachetime.push(await GetData(`cachetime${i}`));
         cachename.push(await GetData(`cachename${i}`));
       }
-
+      let hasUpdate = await CheckForUpdate();
       const profiledata = await GetProfile(uuid);
       this.setState({
         isLoading: false,
@@ -65,6 +67,7 @@ export default class Forge extends React.Component {
           cachename,
           cachetime,
         },
+        hasUpdate
       });
     } catch (e) {
       console.log(e);
@@ -80,7 +83,6 @@ export default class Forge extends React.Component {
     const timeleft = [];
     const displaydata = [];
     const uniqueforges = [];
-
     if (this.state.isLoading) {
       return (
         <View style={{ flex: 1, paddingTop: 40 }}>
@@ -95,6 +97,7 @@ export default class Forge extends React.Component {
     if (this.state.uuid != null && this.state.profiledata != null) {
       const profiledata = this.state.profiledata.members[this.state.uuid];
       const forge = profiledata.forge?.forge_processes?.forge_1;
+
       if (forge == undefined) {
         emptyForge = true
       }
@@ -220,7 +223,16 @@ export default class Forge extends React.Component {
             />
           </TouchableOpacity>
         </View>
-
+        {this.state.hasUpdate && (
+          <View style={{ position: "absolute", top: "75%", left: "25%", width: "50%", height: "6%", backgroundColor: "#d96437", borderRadius: 10 }}>
+            <TouchableOpacity onPress={() => Linking.openURL("https://github.com/z12as0/forge/releases/latest")}>
+              <Text
+                style={{ fontSize: 16, textAlign: "center" }}
+              >NEW UPDATE AVAILABLE
+                (CLICK TO DOWNLOAD)</Text>
+            </TouchableOpacity>
+          </View>)
+        }
         <View style={{ position: "absolute", top: 0, left: 10 }}>
           <TouchableOpacity onPress={() => {
             this.setState({ isLoading: true })
@@ -240,6 +252,18 @@ export default class Forge extends React.Component {
             <Image
               style={{ width: 35, height: 35 }}
               source={require('../assets/settings.png')} />
+          </TouchableOpacity>
+        </View>
+        <View style={{ justifyContent: 'flex-end', alignItems: "flex-end", flex: 1 }}>
+          <TouchableOpacity onPress={() => Linking.openURL("https://discord.gg/WmVUPPqafZ")}>
+            <Image
+              style={{ width: 50, height: 50, borderRadius: 100 }}
+              source={require('../assets/discord.png')} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => Linking.openURL("https://github.com/z12as0/forge")}>
+            <Image
+              style={{ width: 50, height: 50, borderRadius: 100 }}
+              source={require('../assets/github.png')} />
           </TouchableOpacity>
         </View>
       </View>
