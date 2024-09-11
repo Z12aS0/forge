@@ -4,14 +4,11 @@ import * as Network from "expo-network"
 import { GetData, SaveData } from './SecureStore';
 import { Warn } from './Toast';
 import { Notify } from './Notifications';
-import forgedata_ from '../forgedata.json';
-import { apikey } from '../apikey';
-
+import forgedata from '../forgedata.json';
 
 const BACKGROUND_FETCH_TASK = 'Forge-Background-Task';
-const forgedata = forgedata_[0];
 TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
-  if (await Network.getNetworkStateAsync.isInternetReachable) {
+  if ((await Network.getNetworkStateAsync()).isInternetReachable) {
     background();
     return BackgroundFetch.BackgroundFetchResult.NewData;
   }
@@ -24,6 +21,7 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
 
 
 export async function RegisterTask(interval = 8) {
+  if (interval == "test") { interval = 0.0003 } // 1 second
   let a = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
   if (!a) {
     BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
@@ -39,7 +37,7 @@ export async function RegisterTask(interval = 8) {
 }
 
 async function waitForConnection() {
-  if (await Network.getNetworkStateAsync.isInternetReachable) {
+  if ((await Network.getNetworkStateAsync()).isInternetReachable) {
     background();
   } else {
     setTimeout(waitForConnection, 300000); // 5min
@@ -47,25 +45,18 @@ async function waitForConnection() {
 }
 
 async function background() {
+  let profiledata
   try {
     const uuid = await GetData('uuid');
     if (!uuid) return;
-    const profiledata1 = await fetch(`https://api.hypixel.net/skyblock/profiles?uuid=${uuid}&key=${apikey}`)
+
+    const profiledata1 = await fetch(`https://sky.shiiyu.moe/api/v2/profile/${uuid}`)
       .then((response) => response.json());
-    if (profiledata1.success == true && profiledata1.profiles != null) // is something invalid?
+    if (profiledata1.profiles != null) // is something invalid?
     {
-      for (let i = 0; i < 69; i++) // get selected profile
-      {
-        if (profiledata1.profiles[i].selected == true) {
-          const profiledata = profiledata1.profiles[i].members[uuid]; // success
-          break;
-        }
-
-      }
+      const profilesArray = Object.values(profiledata1.profiles)
+      profiledata = profilesArray.find(profile => profile.current)
     } else {
-      if (profiledata1.cause == 'Malformed UUID') { Notify(undefined, 'Failed to execute auto notification: invalid UUID', 1); return; }
-      if (profiledata1.cause == 'Invalid API key') { Notify(undefined, 'Failed to execute auto notification: Invalid API key', 1); return; }
-
       setTimeout(background, 5000);
       return;
     } // "Hypixel api is under maintenance" :nerd: :nerd: :clown:
@@ -74,8 +65,9 @@ async function background() {
   }
 
   if (!profiledata) return;
-  const forge = profiledata.forge?.forge_processes?.forge_1;
+  profiledata = profiledata.raw
 
+  const forge = Object.values(profiledata.forge?.forge_processes?.forge_1);
   // quickforge
   let quickforge;
   if (profiledata.mining_core?.nodes?.forge_time) {
@@ -92,15 +84,14 @@ async function background() {
   const timeleft = [];
   let uniqueforges = [];
   for (let i = 0; i < 5; i++) {
-    if (!forge[i + 1]) return;
-    forgeend = forge[i + 1].startTime + 3600000 * quickforge * forgedata[forge[i + 1].id].duration;
-    forgeid = forge[i + 1].id.toLowerCase();
+    if (!forge[i]) return;
+    forgeend = forge[i].startTime + 3600000 * quickforge * forgedata[forge[i].id].duration;
+    forgeid = forge[i].id.toLowerCase();
     if (forgeend - Date.now() > 0) {
       timeleft.push((forgeend - 180000 - Date.now()) / 1000);
     } else {
       timeleft.push('1');
     }
-
     if (!uniqueforges[forgeid]) {
       uniqueforges[forgeid] = {
         count: 1,
@@ -111,13 +102,12 @@ async function background() {
       uniqueforges[forgeid].count++;
       uniqueforges[forgeid].timeleft = timeleft[i];
     }
-
-
     SaveData(`cachetime${i}`, forgeend.toString()); SaveData(`cachename${i}`, forgeid);
   }
-
   for (const unique in uniqueforges) {
     const { timeleft, count, id } = uniqueforges[unique];
+
     Notify(timeleft, `${count} ${id} is ready!`);
   }
 }
+export { background };

@@ -10,7 +10,7 @@ import { Warn } from '../Utils/Toast';
 import { RegisterTask } from '../Utils/BackgroundTask';
 import { ClearNotifications } from '../Utils/Notifications';
 import { Button1 } from '../Renders/Button';
-
+import { background } from '../Utils/BackgroundTask';
 
 export default class Config extends React.Component {
   state = {
@@ -47,6 +47,15 @@ export default class Config extends React.Component {
             placeholder="Custom auto notification inverval"
             onSubmitEditing={(event) => {
               this.setState({ interval: event.nativeEvent.text });
+            }}
+          />
+        </View>
+        <View style={{ marginTop: 10, marginBottom: 10 }}>
+          <Button1
+            title="Test background task"
+            style={{ textAlign: 'center', backgroundColor: 'gray' }}
+            onPress={() => {
+              background();
             }}
           />
         </View>

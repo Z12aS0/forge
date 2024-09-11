@@ -15,7 +15,7 @@ import { Notify } from "../Utils/Notifications";
 import { GetData, SaveData } from "../Utils/SecureStore";
 import { Warn } from "../Utils/Toast";
 
-import forgedata_ from "../forgedata.json";
+import forgedata from "../forgedata.json";
 import { GetProfile } from "../Utils/ApiUtils";
 
 //import { Button1 } from "../Renders/Button";
@@ -29,12 +29,11 @@ let forgeid;
 let forgeend;
 
 let heavypearldisplay = "";
-let godpotdisplay = "";
 let quickforge;
 let emptyForge;
 
 const moment = require("moment");
-const forgedata = forgedata_[0];
+
 
 
 
@@ -52,17 +51,24 @@ export default class Forge extends React.Component {
       const cachename = [];
 
       const uuid = await GetData("uuid");
-
       for (let i = 0; i < 5; i++) {
-        cachetime.push(await GetData(`cachetime${i}`));
-        cachename.push(await GetData(`cachename${i}`));
+        let time_ = await GetData(`cachetime${i}`)
+        let name_ = await GetData(`cachename${i}`)
+        if (time_ != null && name_ != null) {
+          cachetime.push(time_);
+          cachename.push(name_);
+        } else {
+          cachetime.push(i);
+          cachename.push(i);
+        }
+
       }
-      let hasUpdate = await CheckForUpdate();
-      const profiledata = await GetProfile(uuid);
+      const hasUpdate = await CheckForUpdate();
+      const profiledata = await GetProfile(uuid)
+
       this.setState({
         isLoading: false,
         profiledata,
-        uuid,
         cache: {
           cachename,
           cachetime,
@@ -93,27 +99,18 @@ export default class Forge extends React.Component {
         </View>
       );
     }
-
-    if (this.state.uuid != null && this.state.profiledata != null) {
-      const profiledata = this.state.profiledata.members[this.state.uuid];
-      const forge = profiledata.forge?.forge_processes?.forge_1;
-
+    if (this.state.profiledata != null) {
+      const profiledata = this.state.profiledata.raw;
+      const forge = Object.values(profiledata.forge?.forge_processes?.forge_1);
       if (forge == undefined) {
         emptyForge = true
       }
-
       // matriarch
       if (profiledata.nether_island_player_data?.matriarch?.last_attempt) {
         heavypearldisplay = moment(
           profiledata.nether_island_player_data.matriarch.last_attempt
         ).fromNow();
       }
-
-      // god pot
-      if (profiledata.active_effects?.length > 28) {
-        godpotdisplay = (Math.round((profiledata.active_effects[0].ticks_remaining / 72000) * 100) / 100) + "h";
-      }
-
       // quickforge
       if (profiledata.mining_core?.nodes?.forge_time) {
         const quickforge_ = profiledata.mining_core.nodes.forge_time;
@@ -127,10 +124,11 @@ export default class Forge extends React.Component {
       }
       if (!emptyForge) {
         // data
+
         for (let i = 0; i < 5; i++) {
-          if (!forge[i + 1]) continue
-          forgeend = forge[i + 1].startTime + 3600000 * quickforge * forgedata[forge[i + 1].id].duration;
-          forgeid = forge[i + 1].id.toLowerCase();
+          if (!forge[i]) continue
+          forgeend = forge[i].startTime + 3600000 * quickforge * forgedata[forge[i].id].duration;
+          forgeid = forge[i].id.toLowerCase();
           forgeendtime = moment(new Date(forgeend)).format("hh:mm A");
           forgeuntil = moment(forgeend).fromNow();
           if (forgeend - Date.now() > 0) {
@@ -187,6 +185,7 @@ export default class Forge extends React.Component {
         }
       } catch (e) {
         console.log(e);
+
       }
     }
 
@@ -196,10 +195,6 @@ export default class Forge extends React.Component {
         <Text style={styles.title}>{titletext}</Text>
         <FlatList1 data={displaydata} />
         <View style={{ marginTop: 10 }} />
-        <Text style={styles.text}>
-          God potion remaining:
-          {`${godpotdisplay}`}
-        </Text>
         <Text style={styles.text}>
           Heavy Pearls: {heavypearldisplay}
         </Text>
@@ -255,7 +250,7 @@ export default class Forge extends React.Component {
           </TouchableOpacity>
         </View>
         <View style={{ justifyContent: 'flex-end', alignItems: "flex-end", flex: 1 }}>
-          <TouchableOpacity onPress={() => Linking.openURL("https://discord.gg/WmVUPPqafZ")}>
+          <TouchableOpacity onPress={() => Linking.openURL("https://discord.gg/HVbk5crpF3")}>
             <Image
               style={{ width: 50, height: 50, borderRadius: 100 }}
               source={require('../assets/discord.png')} />

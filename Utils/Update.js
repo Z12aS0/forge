@@ -7,7 +7,7 @@ export async function CheckForUpdate() {
         let version = appdata.expo.version;
         let latestVersion = latest.tag_name.replace('v', '');
 
-        if (latestVersion != version) {
+        if (latestVersion > version) {
             return true;
         } else {
             return false;

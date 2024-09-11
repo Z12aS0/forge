@@ -1,15 +1,11 @@
 import React from 'react';
 import {
-  ActivityIndicator, Text, View, StyleSheet, TextInput, FlatList, TouchableOpacity,
+  ActivityIndicator, Text, View, StyleSheet, TextInput, FlatList, TouchableOpacity, Image,
 } from 'react-native';
-import forgedata_ from '../forgedata.json';
+import forgedata from '../forgedata.json';
 import { formatNumber } from '../Utils/Misc';
 import { RadioButton } from 'react-native-paper';
 import { ShowMore } from '../Renders/ShowMore';
-
-
-
-const forgedata = forgedata_[0];
 
 export default class Recipes extends React.Component {
   constructor(props) {
@@ -44,14 +40,14 @@ export default class Recipes extends React.Component {
         const result = prices[materialId] * amount;
         return result;
       }
-      return 0;
+      return "";
     } catch (a) { }
   }
 
   renderMaterial(item) {
     return (
       <View>
-        <Text style={{ textAlign: 'center' }}>
+        <Text style={{ textAlign: 'right' }}>
           {formatNumber(item.amount)} {item.id.toLowerCase().replace(/_/g, ' ')} {this.getPrice(item.id, item.amount)}
         </Text>
       </View>
@@ -220,19 +216,19 @@ export default class Recipes extends React.Component {
                 <Text style={{ textAlign: 'center' }}>
                   {forgedata[item].id.toLowerCase().replace(/_/g, ' ')}
                 </Text>
-                <Text style={{ textAlign: 'center' }}>
+                <Text style={{ textAlign: 'left' }}>
                   Craft price:
                   {formatNumber(totalValue)}
                 </Text>
-                <Text style={{ textAlign: 'center' }}>
+                <Text style={{ textAlign: 'left' }}>
                   Market price:
                   {this.getPrice(item, 1)}
                 </Text>
-                <Text style={{ textAlign: 'center' }}>
+                <Text style={{ textAlign: 'left' }}>
                   Profit:
                   {formatNumber(itemPrice - totalValue)}
                 </Text>
-                <Text style={{ textAlign: 'center' }}>
+                <Text style={{ textAlign: 'left' }}>
                   Duration:
                   {forgedata[item].duration}
                   hour(s) ({formatNumber((itemPrice - totalValue) / forgedata[item].duration)}/hour) {'\n'}
