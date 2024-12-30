@@ -4,7 +4,7 @@ import * as Network from "expo-network"
 import { GetData, SaveData } from './SecureStore';
 import { Warn } from './Toast';
 import { Notify } from './Notifications';
-import forgedata from '../forgedata.json';
+import { getforgedata } from './ForgeData';
 
 const BACKGROUND_FETCH_TASK = 'Forge-Background-Task';
 TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
@@ -49,7 +49,6 @@ async function background() {
   try {
     const uuid = await GetData('uuid');
     if (!uuid) return;
-
     const profiledata1 = await fetch(`https://sky.shiiyu.moe/api/v2/profile/${uuid}`)
       .then((response) => response.json());
     if (profiledata1.profiles != null) // is something invalid?
@@ -83,6 +82,7 @@ async function background() {
   let forgeend;
   const timeleft = [];
   let uniqueforges = [];
+  const forgedata = await getforgedata();
   for (let i = 0; i < 5; i++) {
     if (!forge[i]) return;
     forgeend = forge[i].startTime + 3600000 * quickforge * forgedata[forge[i].id].duration;

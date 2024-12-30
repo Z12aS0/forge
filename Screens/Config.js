@@ -11,7 +11,8 @@ import { RegisterTask } from '../Utils/BackgroundTask';
 import { ClearNotifications } from '../Utils/Notifications';
 import { Button1 } from '../Renders/Button';
 import { background } from '../Utils/BackgroundTask';
-
+import { getforgedata } from '../Utils/ForgeData';
+import { forgedata } from '../Utils/ForgeData';
 export default class Config extends React.Component {
   state = {
     interval: 8, // default value
@@ -56,6 +57,15 @@ export default class Config extends React.Component {
             style={{ textAlign: 'center', backgroundColor: 'gray' }}
             onPress={() => {
               background();
+            }}
+          />
+        </View>
+        <View style={{ marginTop: 10, marginBottom: 10 }}>
+          <Button1
+            title="Refresh forge data"
+            style={{ textAlign: 'center', backgroundColor: 'gray' }}
+            onPress={() => {
+              getforgedata(1);
             }}
           />
         </View>

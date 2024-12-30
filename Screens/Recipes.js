@@ -2,10 +2,15 @@ import React from 'react';
 import {
   ActivityIndicator, Text, View, StyleSheet, TextInput, FlatList, TouchableOpacity, Image,
 } from 'react-native';
-import forgedata from '../forgedata.json';
+import { getforgedata } from '../Utils/ForgeData';
 import { formatNumber } from '../Utils/Misc';
 import { RadioButton } from 'react-native-paper';
 import { ShowMore } from '../Renders/ShowMore';
+let forgedata
+async function initializeForgedata() {
+  forgedata = await getforgedata();
+}
+initializeForgedata();
 
 export default class Recipes extends React.Component {
   constructor(props) {
@@ -27,7 +32,7 @@ export default class Recipes extends React.Component {
       .catch((error) => console.error(error));
   }
 
-  getPrice = (materialId, amount, mode = 1) => {
+  getPrice = (materialId, amount = 1, mode = 1) => {
     let { prices } = this.state
     try {
       if (mode == 1) {
@@ -40,7 +45,11 @@ export default class Recipes extends React.Component {
         const result = prices[materialId] * amount;
         return result;
       }
-      return "";
+      else if (materialId == "SKYBLOCK_COIN") {
+        return amount;
+      }
+      return 0;
+
     } catch (a) { }
   }
 
@@ -207,7 +216,7 @@ export default class Recipes extends React.Component {
           renderItem={({ item }) => {
             let totalValue = 0;
             for (const material in forgedata[item].materials) {
-              totalValue += this.getPrice(forgedata[item].materials[material].id, forgedata[item].materials[material].amount, 0, 1);
+              totalValue += this.getPrice(forgedata[item].materials[material].id, forgedata[item].materials[material].amount, 0);
             }
 
             const itemPrice = this.getPrice(item, 1, 0);
@@ -221,8 +230,8 @@ export default class Recipes extends React.Component {
                   {formatNumber(totalValue)}
                 </Text>
                 <Text style={{ textAlign: 'left' }}>
-                  Market price:
-                  {this.getPrice(item, 1)}
+                  {"Market price: " +
+                    this.getPrice(item)}
                 </Text>
                 <Text style={{ textAlign: 'left' }}>
                   Profit:
@@ -231,7 +240,7 @@ export default class Recipes extends React.Component {
                 <Text style={{ textAlign: 'left' }}>
                   Duration:
                   {forgedata[item].duration}
-                  hour(s) ({formatNumber((itemPrice - totalValue) / forgedata[item].duration)}/hour) {'\n'}
+                  hour(s) {"(" + forgedata[item].duration > 0.01 && formatNumber((itemPrice - totalValue) / forgedata[item].duration) + "/hour)"} {'\n'}
                 </Text>
                 <ShowMore
                   showText='Show raw profit'

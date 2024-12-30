@@ -1,6 +1,6 @@
 {
     "AMBER_MATERIAL": {
-        "duration": 7.0,
+        "duration": 6.0,
         "materials": [
             {
                 "id": "GOLDEN_PLATE",
@@ -28,23 +28,27 @@
         "id": "AMBER_NECKLACE"
     },
     "AMBER_POLISHED_DRILL_ENGINE": {
-        "duration": 50.0,
+        "duration": 0.0083,
         "materials": [
             {
-                "id": "FLAWLESS_AMBER_GEM",
-                "amount": 1.0
+                "id": "DRILL_ENGINE",
+                "amount": 5.0
             },
             {
-                "id": "ROBOTRON_REFLECTOR",
-                "amount": 50.0
+                "id": "PERFECT_AMBER_GEM",
+                "amount": 5.0
+            },
+            {
+                "id": "PRECURSOR_APPARATUS",
+                "amount": 16.0
             },
             {
                 "id": "SAPPHIRE_POLISHED_DRILL_ENGINE",
                 "amount": 1.0
             },
             {
-                "id": "RUBY_POLISHED_DRILL_ENGINE",
-                "amount": 1.0
+                "id": "PLASMA",
+                "amount": 32.0
             }
         ],
         "id": "AMBER_POLISHED_DRILL_ENGINE"
@@ -230,7 +234,7 @@
         "id": "DIAMONITE"
     },
     "DIVAN_BOOTS": {
-        "duration": 23.0,
+        "duration": 23.5,
         "materials": [
             {
                 "id": "GEMSTONE_MIXTURE",
@@ -248,7 +252,7 @@
         "id": "DIVAN_BOOTS"
     },
     "DIVAN_CHESTPLATE": {
-        "duration": 23.0,
+        "duration": 23.5,
         "materials": [
             {
                 "id": "GEMSTONE_MIXTURE",
@@ -284,7 +288,7 @@
         "id": "DIVAN_DRILL"
     },
     "DIVAN_HELMET": {
-        "duration": 23.0,
+        "duration": 23.5,
         "materials": [
             {
                 "id": "FLAWLESS_RUBY_GEM",
@@ -302,7 +306,7 @@
         "id": "DIVAN_HELMET"
     },
     "DIVAN_LEGGINGS": {
-        "duration": 23.0,
+        "duration": 23.5,
         "materials": [
             {
                 "id": "DIVAN_FRAGMENT",
@@ -448,7 +452,7 @@
         "id": "FORGE_TRAVEL_SCROLL"
     },
     "FRIGID_HUSK": {
-        "duration": 10.0,
+        "duration": 6.0,
         "materials": [
             {
                 "id": "FLAWLESS_ONYX_GEM",
@@ -538,7 +542,7 @@
             },
             {
                 "id": "MAGMA_CORE",
-                "amount": 5.0
+                "amount": 8.0
             }
         ],
         "id": "GEMSTONE_DRILL_3"
@@ -557,12 +561,16 @@
             {
                 "id": "GEMSTONE_DRILL_3",
                 "amount": 1.0
+            },
+            {
+                "id": "MAGMA_CORE",
+                "amount": 16.0
             }
         ],
         "id": "GEMSTONE_DRILL_4"
     },
     "GEMSTONE_FUEL_TANK": {
-        "duration": 30.0,
+        "duration": 0.0083,
         "materials": [
             {
                 "id": "CONTROL_SWITCH",
@@ -632,7 +640,7 @@
         "id": "GLACITE_AMALGAMATION"
     },
     "GLACITE_CHISEL": {
-        "duration": 18.0,
+        "duration": 0.0083,
         "materials": [
             {
                 "id": "REINFORCED_CHISEL",
@@ -654,7 +662,7 @@
         "id": "GLACITE_CHISEL"
     },
     "GLEAMING_CRYSTAL": {
-        "duration": 9.0,
+        "duration": 6.0,
         "materials": [
             {
                 "id": "GLOSSY_GEMSTONE",
@@ -690,62 +698,78 @@
         "materials": [
             {
                 "id": "GOBLIN_EGG",
-                "amount": 99.0
+                "amount": 96.0
             }
         ],
         "id": "GOBLIN_OMELETTE"
     },
     "GOBLIN_OMELETTE_BLUE_CHEESE": {
-        "duration": 20.0,
+        "duration": 18.0,
         "materials": [
             {
-                "id": "GOBLIN_EGG_BLUE",
-                "amount": 99.0
+                "id": "GOBLIN_OMELETTE",
+                "amount": 1.0
             },
             {
-                "id": "PERFECT_SAPPHIRE_GEM",
+                "id": "FLAWLESS_SAPPHIRE_GEM",
                 "amount": 1.0
+            },
+            {
+                "id": "GOBLIN_EGG_BLUE",
+                "amount": 96.0
             }
         ],
         "id": "GOBLIN_OMELETTE_BLUE_CHEESE"
     },
     "GOBLIN_OMELETTE_PESTO": {
-        "duration": 20.0,
+        "duration": 18.0,
         "materials": [
             {
-                "id": "GOBLIN_EGG_GREEN",
-                "amount": 99.0
+                "id": "FLAWLESS_JADE_GEM",
+                "amount": 1.0
             },
             {
-                "id": "FINE_JADE_GEM",
+                "id": "GOBLIN_EGG_GREEN",
+                "amount": 96.0
+            },
+            {
+                "id": "GOBLIN_OMELETTE",
                 "amount": 1.0
             }
         ],
         "id": "GOBLIN_OMELETTE_PESTO"
     },
     "GOBLIN_OMELETTE_SPICY": {
-        "duration": 20.0,
+        "duration": 18.0,
         "materials": [
-            {
-                "id": "GOBLIN_EGG_RED",
-                "amount": 99.0
-            },
             {
                 "id": "FLAWLESS_RUBY_GEM",
                 "amount": 1.0
+            },
+            {
+                "id": "GOBLIN_OMELETTE",
+                "amount": 1.0
+            },
+            {
+                "id": "GOBLIN_EGG_RED",
+                "amount": 96.0
             }
         ],
         "id": "GOBLIN_OMELETTE_SPICY"
     },
     "GOBLIN_OMELETTE_SUNNY_SIDE": {
-        "duration": 20.0,
+        "duration": 18.0,
         "materials": [
             {
                 "id": "GOBLIN_EGG_YELLOW",
-                "amount": 99.0
+                "amount": 96.0
             },
             {
-                "id": "FINE_TOPAZ_GEM",
+                "id": "FLAWLESS_TOPAZ_GEM",
+                "amount": 1.0
+            },
+            {
+                "id": "GOBLIN_OMELETTE",
                 "amount": 1.0
             }
         ],
@@ -770,7 +794,7 @@
         "id": "GOLDEN_PLATE"
     },
     "HOT_STUFF": {
-        "duration": 24.0,
+        "duration": 6.0,
         "materials": [
             {
                 "id": "ROUGH_AMBER_GEM",
@@ -854,7 +878,7 @@
         "materials": [
             {
                 "id": "GOLDEN_PLATE",
-                "amount": 5.0
+                "amount": 1.0
             },
             {
                 "id": "MITHRIL_DRILL_1",
@@ -868,11 +892,11 @@
         "id": "MITHRIL_DRILL_2"
     },
     "MITHRIL_DRILL_ENGINE": {
-        "duration": 15.0,
+        "duration": 24.0,
         "materials": [
             {
                 "id": "MITHRIL_PLATE",
-                "amount": 3.0
+                "amount": 1.0
             },
             {
                 "id": "DRILL_ENGINE",
@@ -882,7 +906,7 @@
         "id": "MITHRIL_DRILL_ENGINE"
     },
     "MITHRIL_FUEL_TANK": {
-        "duration": 10.0,
+        "duration": 24.0,
         "materials": [
             {
                 "id": "REFINED_DIAMOND",
@@ -988,19 +1012,23 @@
         "id": "PENGUIN;4"
     },
     "PERFECTLY_CUT_FUEL_TANK": {
-        "duration": 50.0,
+        "duration": 0.0083,
         "materials": [
             {
                 "id": "GEMSTONE_FUEL_TANK",
                 "amount": 1.0
             },
             {
+                "id": "PRECURSOR_APPARATUS",
+                "amount": 16.0
+            },
+            {
                 "id": "GEMSTONE_MIXTURE",
                 "amount": 25.0
             },
             {
-                "id": "SYNTHETIC_HEART",
-                "amount": 70.0
+                "id": "PLASMA",
+                "amount": 32.0
             }
         ],
         "id": "PERFECTLY_CUT_FUEL_TANK"
@@ -1048,7 +1076,7 @@
         "id": "PERFECT_AQUAMARINE_GEM"
     },
     "PERFECT_CHISEL": {
-        "duration": 24.0,
+        "duration": 0.0083,
         "materials": [
             {
                 "id": "BEJEWELED_HANDLE",
@@ -1210,7 +1238,7 @@
         "id": "PERFECT_TOPAZ_GEM"
     },
     "PETRIFIED_STARFALL": {
-        "duration": 14.0,
+        "duration": 6.0,
         "materials": [
             {
                 "id": "STARFALL",
@@ -1218,6 +1246,30 @@
             }
         ],
         "id": "PETRIFIED_STARFALL"
+    },
+    "POCKET_ICEBERG": {
+        "duration": 6.0,
+        "materials": [
+            {
+                "id": "GLACITE_JEWEL",
+                "amount": 5.0
+            }
+        ],
+        "id": "POCKET_ICEBERG"
+    },
+    "POLISHED_TOPAZ_ROD": {
+        "duration": 12.0,
+        "materials": [
+            {
+                "id": "BEJEWELED_HANDLE",
+                "amount": 3.0
+            },
+            {
+                "id": "FLAWLESS_TOPAZ_GEM",
+                "amount": 2.0
+            }
+        ],
+        "id": "POLISHED_TOPAZ_ROD"
     },
     "PORTABLE_CAMPFIRE": {
         "duration": 0.5,
@@ -1262,7 +1314,7 @@
         "id": "POWER_RELIC"
     },
     "PURE_MITHRIL": {
-        "duration": 12.0,
+        "duration": 6.0,
         "materials": [
             {
                 "id": "REFINED_MITHRIL",
@@ -1344,7 +1396,7 @@
         "id": "REFINED_UMBER"
     },
     "REINFORCED_CHISEL": {
-        "duration": 12.0,
+        "duration": 0.0083,
         "materials": [
             {
                 "id": "REFINED_TUNGSTEN",
@@ -1366,7 +1418,7 @@
         "id": "REINFORCED_CHISEL"
     },
     "ROCK_GEMSTONE": {
-        "duration": 22.0,
+        "duration": 6.0,
         "materials": [
             {
                 "id": "TREASURITE",
@@ -1380,19 +1432,23 @@
         "id": "ROCK_GEMSTONE"
     },
     "RUBY_POLISHED_DRILL_ENGINE": {
-        "duration": 20.0,
+        "duration": 0.0083,
         "materials": [
             {
                 "id": "SUPERLITE_MOTOR",
                 "amount": 10.0
             },
             {
-                "id": "MITHRIL_DRILL_ENGINE",
+                "id": "TITANIUM_DRILL_ENGINE",
                 "amount": 1.0
             },
             {
-                "id": "FINE_RUBY_GEM",
-                "amount": 10.0
+                "id": "PERFECT_RUBY_GEM",
+                "amount": 1.0
+            },
+            {
+                "id": "DRILL_ENGINE",
+                "amount": 5.0
             }
         ],
         "id": "RUBY_POLISHED_DRILL_ENGINE"
@@ -1412,23 +1468,19 @@
         "id": "SAPPHIRE_CLOAK"
     },
     "SAPPHIRE_POLISHED_DRILL_ENGINE": {
-        "duration": 30.0,
+        "duration": 0.0083,
         "materials": [
             {
-                "id": "TITANIUM_DRILL_ENGINE",
+                "id": "RUBY_POLISHED_DRILL_ENGINE",
                 "amount": 1.0
             },
             {
-                "id": "FTX_3070",
-                "amount": 25.0
+                "id": "PRECURSOR_APPARATUS",
+                "amount": 8.0
             },
             {
-                "id": "ELECTRON_TRANSMITTER",
-                "amount": 25.0
-            },
-            {
-                "id": "FINE_SAPPHIRE_GEM",
-                "amount": 20.0
+                "id": "PERFECT_SAPPHIRE_GEM",
+                "amount": 3.0
             }
         ],
         "id": "SAPPHIRE_POLISHED_DRILL_ENGINE"
@@ -1478,6 +1530,20 @@
             }
         ],
         "id": "SPINOSAURUS;4"
+    },
+    "STARFALL_SEASONING": {
+        "duration": 18.0,
+        "materials": [
+            {
+                "id": "TREASURITE",
+                "amount": 16.0
+            },
+            {
+                "id": "STARFALL",
+                "amount": 64.0
+            }
+        ],
+        "id": "STARFALL_SEASONING"
     },
     "TITANIUM_ARTIFACT": {
         "duration": 36.0,
@@ -1542,11 +1608,11 @@
             },
             {
                 "id": "REFINED_MITHRIL",
-                "amount": 10.0
+                "amount": 8.0
             },
             {
                 "id": "REFINED_TITANIUM",
-                "amount": 10.0
+                "amount": 8.0
             },
             {
                 "id": "GOLDEN_PLATE",
@@ -1560,11 +1626,11 @@
         "materials": [
             {
                 "id": "MITHRIL_PLATE",
-                "amount": 6.0
+                "amount": 5.0
             },
             {
                 "id": "REFINED_TITANIUM",
-                "amount": 16.0
+                "amount": 12.0
             },
             {
                 "id": "REFINED_DIAMOND",
@@ -1598,11 +1664,11 @@
             },
             {
                 "id": "REFINED_TITANIUM",
-                "amount": 32.0
+                "amount": 16.0
             },
             {
                 "id": "MITHRIL_PLATE",
-                "amount": 15.0
+                "amount": 10.0
             }
         ],
         "id": "TITANIUM_DRILL_3"
@@ -1620,11 +1686,11 @@
             },
             {
                 "id": "MITHRIL_PLATE",
-                "amount": 5.0
+                "amount": 10.0
             },
             {
                 "id": "REFINED_TITANIUM",
-                "amount": 12.0
+                "amount": 32.0
             },
             {
                 "id": "CORLEONITE",
@@ -1642,29 +1708,25 @@
         "id": "TITANIUM_DRILL_4"
     },
     "TITANIUM_DRILL_ENGINE": {
-        "duration": 30.0,
+        "duration": 0.0083,
         "materials": [
             {
                 "id": "DRILL_ENGINE",
-                "amount": 10.0
+                "amount": 2.0
             },
             {
-                "id": "PLASMA",
-                "amount": 5.0
-            },
-            {
-                "id": "MITHRIL_PLATE",
-                "amount": 4.0
+                "id": "MITHRIL_DRILL_ENGINE",
+                "amount": 1.0
             },
             {
                 "id": "REFINED_TITANIUM",
-                "amount": 5.0
+                "amount": 8.0
             }
         ],
         "id": "TITANIUM_DRILL_ENGINE"
     },
     "TITANIUM_FUEL_TANK": {
-        "duration": 25.0,
+        "duration": 0.0083,
         "materials": [
             {
                 "id": "REFINED_DIAMOND",
@@ -1759,6 +1821,20 @@
         ],
         "id": "TITANIUM_TALISMAN"
     },
+    "TITANIUM_TESSERACT": {
+        "duration": 6.0,
+        "materials": [
+            {
+                "id": "ENCHANTED_LAPIS_LAZULI",
+                "amount": 16.0
+            },
+            {
+                "id": "REFINED_TITANIUM",
+                "amount": 1.0
+            }
+        ],
+        "id": "TITANIUM_TESSERACT"
+    },
     "TUNGSTEN_KEY": {
         "duration": 0.0083,
         "materials": [
@@ -1774,7 +1850,7 @@
         "id": "TUNGSTEN_KEY"
     },
     "TUNGSTEN_KEYCHAIN": {
-        "duration": 6.0,
+        "duration": 18.0,
         "materials": [
             {
                 "id": "PERFECT_OPAL_GEM",

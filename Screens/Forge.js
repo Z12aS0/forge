@@ -15,7 +15,7 @@ import { Notify } from "../Utils/Notifications";
 import { GetData, SaveData } from "../Utils/SecureStore";
 import { Warn } from "../Utils/Toast";
 
-import forgedata from "../forgedata.json";
+import { getforgedata } from "../Utils/ForgeData";
 import { GetProfile } from "../Utils/ApiUtils";
 
 //import { Button1 } from "../Renders/Button";
@@ -33,7 +33,6 @@ let quickforge;
 let emptyForge;
 
 const moment = require("moment");
-
 
 
 
@@ -65,7 +64,7 @@ export default class Forge extends React.Component {
       }
       const hasUpdate = await CheckForUpdate();
       const profiledata = await GetProfile(uuid)
-
+      const forgedata = await getforgedata()
       this.setState({
         isLoading: false,
         profiledata,
@@ -73,7 +72,8 @@ export default class Forge extends React.Component {
           cachename,
           cachetime,
         },
-        hasUpdate
+        hasUpdate,
+        forgedata
       });
     } catch (e) {
       console.log(e);
@@ -127,7 +127,7 @@ export default class Forge extends React.Component {
 
         for (let i = 0; i < 5; i++) {
           if (!forge[i]) continue
-          forgeend = forge[i].startTime + 3600000 * quickforge * forgedata[forge[i].id].duration;
+          forgeend = forge[i].startTime + 3600000 * quickforge * this.state.forgedata[forge[i].id].duration;
           forgeid = forge[i].id.toLowerCase();
           forgeendtime = moment(new Date(forgeend)).format("hh:mm A");
           forgeuntil = moment(forgeend).fromNow();
@@ -254,11 +254,6 @@ export default class Forge extends React.Component {
             <Image
               style={{ width: 50, height: 50, borderRadius: 100 }}
               source={require('../assets/discord.png')} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => Linking.openURL("https://github.com/z12as0/forge")}>
-            <Image
-              style={{ width: 50, height: 50, borderRadius: 100 }}
-              source={require('../assets/github.png')} />
           </TouchableOpacity>
         </View>
       </View>
