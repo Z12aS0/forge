@@ -6,6 +6,7 @@ import { SaveData } from './SecureStore';
 async function getuuid(username) {
   try {
     SaveData('uuid', username);
+    Warn('Username saved: ' + username)
   } catch (e) {
   }
 }

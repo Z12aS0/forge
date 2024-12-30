@@ -26,26 +26,22 @@ export default class Recipes extends React.Component {
   componentDidMount() {
     fetch('https://lb.tricked.pro/lowestbins')
       .then((response) => response.json())
-      .then((data) => {
-        this.setState({ prices: data, isLoading: false });
+      .then((prices) => {
+        this.setState({ prices, isLoading: false });
       })
       .catch((error) => console.error(error));
   }
 
-  getPrice = (materialId, amount = 1, mode = 1) => {
+  getPrice = (materialId, amount = 1, formatting = 1) => {
     let { prices } = this.state
     try {
-      if (mode == 1) {
-        // mode 1 is formatted result and mode 0 is raw result
-
-        if (prices && prices[materialId]) {
+      if (prices && prices[materialId]) {
+        if (formatting) {
           return formatNumber(prices[materialId] * amount);
+        } else {
+          return prices[materialId] * amount;
         }
-      } else if (prices && prices[materialId]) {
-        const result = prices[materialId] * amount;
-        return result;
-      }
-      else if (materialId == "SKYBLOCK_COIN") {
+      } else if (materialId == "SKYBLOCK_COIN") {
         return amount;
       }
       return 0;

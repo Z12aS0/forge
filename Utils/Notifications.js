@@ -15,7 +15,7 @@ async function Notify(timeleft = 1, text = 'Forge is ready', noToast = 0) {
       priority: 'max',
       data: { data: 'collect forge' },
     },
-    trigger: { seconds: 1 }
+    trigger: { seconds: timeleft } // :)
   });
   if (!noToast) {
     setTimeout(() => {

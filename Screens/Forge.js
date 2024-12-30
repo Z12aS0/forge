@@ -101,7 +101,7 @@ export default class Forge extends React.Component {
     }
     if (this.state.profiledata != null) {
       const profiledata = this.state.profiledata.raw;
-      const forge = Object.values(profiledata.forge?.forge_processes?.forge_1);
+      const forge = profiledata?.forge?.forge_processes?.forge_1;
       if (forge == undefined) {
         emptyForge = true
       }
@@ -125,7 +125,7 @@ export default class Forge extends React.Component {
       if (!emptyForge) {
         // data
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i <= 5; i++) {
           if (!forge[i]) continue
           forgeend = forge[i].startTime + 3600000 * quickforge * this.state.forgedata[forge[i].id].duration;
           forgeid = forge[i].id.toLowerCase();

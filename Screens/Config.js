@@ -12,7 +12,7 @@ import { ClearNotifications } from '../Utils/Notifications';
 import { Button1 } from '../Renders/Button';
 import { background } from '../Utils/BackgroundTask';
 import { getforgedata } from '../Utils/ForgeData';
-import { forgedata } from '../Utils/ForgeData';
+import { clearcache } from '../Utils/ClearCache';
 export default class Config extends React.Component {
   state = {
     interval: 8, // default value
@@ -22,7 +22,8 @@ export default class Config extends React.Component {
     return (
       <View style={{ marginTop: 20, backgroundColor: '#242323' }}>
         <View style={{ alignItems: 'center' }}>
-          <TextInput style={styles.textinput} placeholder="username" onSubmitEditing={(event) => { getuuid(event.nativeEvent.text); }} />
+          <TextInput style={styles.textinput} placeholder="username"
+            onSubmitEditing={(event) => { getuuid(event.nativeEvent.text); }} />
         </View>
 
         <Button1
@@ -38,6 +39,15 @@ export default class Config extends React.Component {
             style={{ textAlign: 'center', backgroundColor: 'gray' }}
             onPress={() => {
               RegisterTask(this.state.interval);
+            }}
+          />
+        </View>
+        <View style={{ marginTop: 10, marginBottom: 10 }}>
+          <Button1
+            title="Clear cached data"
+            style={{ textAlign: 'center', backgroundColor: 'gray' }}
+            onPress={() => {
+              clearcache();
             }}
           />
 
